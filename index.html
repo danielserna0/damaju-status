@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Damaju Status</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0f12; --surface: #14171d; --border: #1f2430; --border2: #2a3040;
+      --text: #c8cdd8; --muted: #5a6070; --accent: #d4a843;
+      --up: #2dce6e; --up-dim: #1a5c38; --up-glow: rgba(45,206,110,0.18);
+      --down: #e8455a; --down-dim: #5c1a24; --down-glow: rgba(232,69,90,0.18);
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px); pointer-events: none; z-index: 1000; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+    header { border-bottom: 1px solid var(--border); padding: 28px 0 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark { width: 38px; height: 38px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 17px; color: #0d0f12; flex-shrink: 0; }
+    .logo-text { font-family: var(--mono); font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
+    .logo-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .refresh-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--up); animation: pulse 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+    #last-updated { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .summary { margin: 28px 0 32px; padding: 20px 24px; border: 1px solid var(--border2); border-radius: 10px; background: var(--surface); display: flex; align-items: center; gap: 16px; }
+    .summary-title { font-size: 17px; font-weight: 600; color: #fff; }
+    .summary-sub { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+    .summary.all-up { border-color: var(--up-dim); background: linear-gradient(135deg, var(--surface), rgba(45,206,110,0.05)); }
+    .summary.has-down { border-color: var(--down-dim); background: linear-gradient(135deg, var(--surface), rgba(232,69,90,0.05)); }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+    .services { display: flex; flex-direction: column; gap: 10px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; display: grid; grid-template-columns: 1fr auto; gap: 10px 20px; align-items: center; transition: border-color 0.2s; }
+    .card:hover { border-color: var(--border2); }
+    .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .service-name { font-weight: 600; font-size: 14px; color: #fff; }
+    .service-url { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .bars { display: flex; gap: 2px; align-items: flex-end; height: 28px; }
+    .bar { flex: 1; min-width: 3px; border-radius: 2px; background: var(--border2); cursor: default; }
+    .bar.up { background: var(--up); }
+    .bar.down { background: var(--down); }
+    .bar-placeholder { background: var(--border) !important; opacity: 0.4; }
+    .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
+    .badge.up { background: var(--up-glow); color: var(--up); border: 1px solid var(--up-dim); }
+    .badge.down { background: var(--down-glow); color: var(--down); border: 1px solid var(--down-dim); }
+    .badge.unknown { background: rgba(90,96,112,0.2); color: var(--muted); border: 1px solid var(--border2); }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .uptime { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .uptime span { color: var(--text); }
+    .response-time { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .loading-state { padding: 60px 0; text-align: center; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 600px) {
+      .card { grid-template-columns: 1fr; }
+      .card-right { flex-direction: row; align-items: center; justify-content: space-between; }
+      header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">D</div>
+        <div>
+          <div class="logo-text">damaju</div>
+          <div class="logo-sub">Status Monitor</div>
+        </div>
+      </div>
+      <div>
+        <div class="refresh-badge"><div class="pulse"></div>Actualiza cada 60s</div>
+        <div id="last-updated">Cargando…</div>
+      </div>
+    </header>
+    <div id="summary" class="summary">
+      <div class="spinner" style="flex-shrink:0"></div>
+      <div class="summary-text">
+        <div class="summary-title">Cargando estado…</div>
+        <div class="summary-sub">Leyendo status.json</div>
+      </div>
+    </div>
+    <div class="section-label">Servicios · últimas 7.5 horas (90 checks)</div>
+    <div id="services" class="services">
+      <div class="loading-state"><div class="spinner"></div><div>Obteniendo datos…</div></div>
+    </div>
+    <footer>
+      <span>Damaju Status Monitor · GitHub Actions + Netlify</span>
+      <span id="footer-ts">—</span>
+    </footer>
+  </div>
+  <script>
+    const $ = id => document.getElementById(id);
+    function fmtTime(iso) {
+      if (!iso || iso === '—') return '—';
+      try {
+        return new Date(iso).toLocaleString('es-CO', { timeZone: 'America/Bogota', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
+      } catch { return iso; }
+    }
+    function serviceName(url) {
+      const sub = url.replace(/https?:\/\//, '').replace(/\/$/, '').split('.')[0];
+      return sub.charAt(0).toUpperCase() + sub.slice(1);
+    }
+    function calcUptime(history) {
+      if (!history || !history.length) return null;
+      return ((history.filter(h => h && h.up).length / history.length) * 100).toFixed(1);
+    }
+    function renderBars(history) {
+      const recent = (history || []).slice(-90);
+      const bars = [];
+      for (let i = 0; i < 90 - recent.length; i++) {
+        bars.push(`<div class="bar bar-placeholder" style="height:${Math.floor(Math.random()*8+8)}px"></div>`);
+      }
+      for (const c of recent) {
+        if (!c) { bars.push(`<div class="bar bar-placeholder" style="height:10px"></div>`); continue; }
+        const h = c.up ? Math.min(28, Math.max(10, Math.round(28 - (c.response_time / 200)))) : 10;
+        const label = c.up ? `UP · ${c.response_time}ms · ${fmtTime(c.timestamp)}` : `DOWN · ${c.status_code || 'timeout'} · ${fmtTime(c.timestamp)}`;
+        bars.push(`<div class="bar ${c.up ? 'up' : 'down'}" style="height:${h}px" title="${label}"></div>`);
+      }
+      return `<div class="bars">${bars.join('')}</div>`;
+    }
+    function render(data) {
+      const services = data.services || {};
+      const urls = Object.keys(services);
+      const downList = urls.filter(u => services[u]?.current && !services[u].current.up);
+      const unknownList = urls.filter(u => !services[u]?.current);
+      const allOk = downList.length === 0 && unknownList.length === 0;
+      const summaryEl = $('summary');
+      if (allOk) {
+        summaryEl.className = 'summary all-up';
+        summaryEl.innerHTML = `<div style="font-size:26px">✅</div><div><div class="summary-title">All systems operational</div><div class="summary-sub">${urls.length} de ${urls.length} servicios activos</div></div>`;
+      } else {
+        const msg = downList.length ? `${downList.length} servicio${downList.length > 1 ? 's' : ''} con problemas` : `${unknownList.length} servicio${unknownList.length > 1 ? 's' : ''} sin datos aún`;
+        summaryEl.className = 'summary has-down';
+        summaryEl.innerHTML = `<div style="font-size:26px">⚠️</div><div><div class="summary-title">Degraded performance</div><div class="summary-sub">${msg}</div></div>`;
+      }
+      const lu = fmtTime(data.last_updated);
+      $('last-updated').textContent = `Actualizado: ${lu}`;
+      $('footer-ts').textContent = `Último check: ${lu}`;
+      if (!urls.length) {
+        $('services').innerHTML = `<div class="loading-state"><div>Sin datos aún. Espera el primer run de GitHub Actions (~5 min).</div></div>`;
+        return;
+      }
+      $('services').innerHTML = urls.map(url => {
+        const svc = services[url] || {};
+        const cur = svc.current;
+        const uptime = calcUptime(svc.history || []);
+        let badge = !cur ? `<span class="badge unknown">PENDING</span>` : cur.up ? `<span class="badge up">UP</span>` : `<span class="badge down">DOWN</span>`;
+        return `<div class="card" ${cur && !cur.up ? 'style="border-color:var(--down-dim)"' : ''}>
+          <div>
+            <div class="card-top"><div><div class="service-name">${serviceName(url)}</div><div class="service-url">${url}</div></div></div>
+            ${renderBars(svc.history || [])}
+          </div>
+          <div class="card-right">
+            ${badge}
+            ${uptime !== null ? `<div class="uptime">Uptime <span>${uptime}%</span></div>` : `<div class="uptime">—</div>`}
+            <div class="response-time">${cur ? `${cur.response_time}ms · HTTP ${cur.status_code || '—'}` : '—'}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    async function loadStatus() {
+      try {
+        const res = await fetch('status.json?t=' + Date.now());
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        render(await res.json());
+      } catch (err) {
+        $('summary').innerHTML = `<div style="font-size:26px">⚠️</div><div><div class="summary-title">No se pudo cargar status.json</div><div class="summary-sub">${err.message}</div></div>`;
+      }
+    }
+    loadStatus();
+    setInterval(loadStatus, 60000);
+  </script>
+</body>
+</html>
