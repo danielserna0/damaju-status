@@ -16,7 +16,7 @@ SITES = [
     "https://tracker.damaju.com.co",
 ]
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}MAX_HISTORY = 288
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}
 MAX_HISTORY = 288
 STATUS_FILE = Path(__file__).parent / "status.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
