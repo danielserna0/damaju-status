@@ -16,7 +16,7 @@ SITES = [
     "https://tracker.damaju.com.co",
 ]
 
-TIMEOUT_SECONDS = 10
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}MAX_HISTORY = 288
 MAX_HISTORY = 288
 STATUS_FILE = Path(__file__).parent / "status.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
@@ -44,7 +44,7 @@ def check_site(url):
     ts = now_iso()
     try:
         start = time.monotonic()
-        resp = requests.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True)
+        resp = requests.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True, headers=HEADERS)
         elapsed_ms = round((time.monotonic() - start) * 1000)
         up = 200 <= resp.status_code < 300
         return {"up": up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
