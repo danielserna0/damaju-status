@@ -16,14 +16,18 @@ SITES = [
     "https://tracker.damaju.com.co",
 ]
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}
+TIMEOUT_SECONDS = 10
 MAX_HISTORY = 288
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}
+
 STATUS_FILE = Path(__file__).parent / "status.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
+
 def now_iso():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
 
 def load_status():
     if STATUS_FILE.exists():
@@ -33,12 +37,15 @@ def load_status():
             pass
     return {"last_updated": now_iso(), "services": {}}
 
+
 def save_status(data):
     STATUS_FILE.write_text(json.dumps(data, indent=2))
+
 
 def service_name(url):
     host = url.replace("https://", "").replace("http://", "").rstrip("/")
     return host.split(".")[0].capitalize()
+
 
 def check_site(url):
     ts = now_iso()
@@ -53,6 +60,7 @@ def check_site(url):
     except requests.exceptions.RequestException as exc:
         return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
+
 def send_telegram(message):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         return
@@ -61,6 +69,7 @@ def send_telegram(message):
         requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}, timeout=10)
     except Exception as exc:
         print(f"Telegram error: {exc}")
+
 
 def build_alert(url, result, went_down):
     icon = "🔴" if went_down else "🟢"
@@ -71,6 +80,7 @@ def build_alert(url, result, went_down):
     err = result.get("error", "")
     detail = f"HTTP {code} · {ms}ms" if not err else f"Error: {err}"
     return f"{icon} <b>Damaju Status Alert</b>\nService: <b>{label}</b>\nURL: {url}\nStatus: <b>{status}</b>\nDetail: {detail}\nTime: {result['timestamp']}"
+
 
 def main():
     data = load_status()
@@ -93,6 +103,7 @@ def main():
     data["last_updated"] = now_iso()
     save_status(data)
     print(f"Done. Updated at {data['last_updated']}")
+
 
 if __name__ == "__main__":
     main()
