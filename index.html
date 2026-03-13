@@ -1,906 +1,226 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Damaju · Estado de servicios</title>
-  <link rel="icon" href="https://damaju.com.co/wp-content/uploads/2026/02/Diseno-sin-titulo-2026-02-25T153654.803.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #070b12;
-      --bg2: #0c1220;
-      --surface: rgba(255,255,255,0.04);
-      --surface-hover: rgba(255,255,255,0.07);
-      --border: rgba(255,255,255,0.08);
-      --border-bright: rgba(255,255,255,0.14);
-      --text: #f0f4ff;
-      --text2: #8b95b0;
-      --muted: #4a5370;
-      --accent: #00e5ff;
-      --accent2: #7c3aed;
-      --up: #00e676;
-      --up-glow: rgba(0,230,118,0.2);
-      --down: #ff1744;
-      --down-glow: rgba(255,23,68,0.2);
-      --warn: #ffc400;
-      --pending: #ff9100;
-      --mono: 'DM Mono', monospace;
-      --sans: 'Syne', sans-serif;
-      --radius: 16px;
-      --radius-sm: 10px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ─── ANIMATED BACKGROUND ─────────────────────────────── */
-    .bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .bg-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.12;
-      animation: orb-drift 20s ease-in-out infinite alternate;
-    }
-    .bg-orb-1 { width: 600px; height: 600px; background: #00e5ff; top: -200px; left: -100px; animation-delay: 0s; }
-    .bg-orb-2 { width: 500px; height: 500px; background: #7c3aed; bottom: -100px; right: -100px; animation-delay: -7s; }
-    .bg-orb-3 { width: 300px; height: 300px; background: #00e676; top: 40%; left: 40%; animation-delay: -14s; }
-    @keyframes orb-drift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(40px, 30px) scale(1.1); }
-    }
-
-    /* Subtle grid */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    /* ─── LAYOUT ──────────────────────────────────────────── */
-    .layout { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
-
-    /* ─── HEADER ──────────────────────────────────────────── */
-    .header-wrap {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 0 24px;
-      margin: 0 -24px;
-    }
-    .header-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(7,11,18,0.8);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      gap: 16px;
-    }
-    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .logo img { height: 32px; width: auto; filter: brightness(1.1); }
-    .logo-sep { width: 1px; height: 18px; background: var(--border-bright); }
-    .logo-tag {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 400;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .header-right { display: flex; align-items: center; gap: 16px; }
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0,230,118,0.08);
-      border: 1px solid rgba(0,230,118,0.2);
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--up);
-      letter-spacing: 0.08em;
-    }
-    .live-pulse {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--up);
-      box-shadow: 0 0 0 0 rgba(0,230,118,0.6);
-      animation: live-ping 2s ease-out infinite;
-    }
-    @keyframes live-ping {
-      0% { box-shadow: 0 0 0 0 rgba(0,230,118,0.6); }
-      70% { box-shadow: 0 0 0 6px rgba(0,230,118,0); }
-      100% { box-shadow: 0 0 0 0 rgba(0,230,118,0); }
-    }
-    #last-updated {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-    }
-
-    /* ─── HERO ────────────────────────────────────────────── */
-    .hero {
-      padding: 56px 0 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-    .hero-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .hero-eyebrow {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 10px;
-      opacity: 0;
-      animation: fade-up 0.6s ease forwards 0.1s;
-    }
-    .hero-title {
-      font-size: clamp(32px, 5vw, 48px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      opacity: 0;
-      animation: fade-up 0.6s ease forwards 0.2s;
-    }
-    .hero-title .status-word {
-      display: inline-block;
-      transition: color 0.5s ease;
-    }
-    .hero-title .status-word.ok { color: var(--up); text-shadow: 0 0 40px rgba(0,230,118,0.4); }
-    .hero-title .status-word.down { color: var(--down); text-shadow: 0 0 40px rgba(255,23,68,0.4); }
-    .hero-sub {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 8px;
-      opacity: 0;
-      animation: fade-up 0.6s ease forwards 0.3s;
-    }
-
-    /* Stat pills */
-    .hero-stats {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fade-up 0.6s ease forwards 0.4s;
-    }
-    .stat-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 14px 20px;
-      text-align: center;
-      min-width: 100px;
-      backdrop-filter: blur(12px);
-      transition: border-color 0.3s, background 0.3s;
-    }
-    .stat-pill:hover { border-color: var(--border-bright); background: var(--surface-hover); }
-    .stat-val {
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
-    }
-    .stat-val.green { color: var(--up); }
-    .stat-val.red { color: var(--down); }
-    .stat-val.blue { color: var(--accent); }
-    .stat-lbl {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* Overall status bar */
-    .status-bar-wrap {
-      opacity: 0;
-      animation: fade-up 0.6s ease forwards 0.5s;
-    }
-    .status-bar-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-    }
-    .status-bar-track {
-      height: 4px;
-      background: var(--surface);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .status-bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--up), var(--accent));
-      box-shadow: 0 0 12px rgba(0,230,118,0.5);
-      transition: width 1s cubic-bezier(0.19,1,0.22,1);
-    }
-
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── SECTION ─────────────────────────────────────────── */
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .section-title {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .section-count {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    /* ─── SERVICE CARDS ───────────────────────────────────── */
-    .services { display: flex; flex-direction: column; gap: 6px; }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      display: grid;
-      grid-template-columns: 40px 1fr auto auto;
-      align-items: center;
-      gap: 20px;
-      backdrop-filter: blur(12px);
-      transition: border-color 0.25s, background 0.25s, transform 0.2s, box-shadow 0.25s;
-      opacity: 0;
-      animation: fade-up 0.5s ease forwards;
-    }
-    .card:hover {
-      border-color: var(--border-bright);
-      background: var(--surface-hover);
-      transform: translateX(4px);
-      box-shadow: -4px 0 0 0 var(--accent), 0 8px 32px rgba(0,0,0,0.3);
-    }
-    .card.is-down {
-      border-color: rgba(255,23,68,0.25);
-      background: rgba(255,23,68,0.03);
-    }
-    .card.is-down:hover {
-      box-shadow: -4px 0 0 0 var(--down), 0 8px 32px rgba(255,23,68,0.1);
-    }
-    .card.is-pending {
-      border-color: rgba(255,145,0,0.25);
-      background: rgba(255,145,0,0.03);
-    }
-
-    /* Status indicator */
-    .card-indicator {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .indicator-ring {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .indicator-ring.up {
-      background: rgba(0,230,118,0.08);
-      border: 1.5px solid rgba(0,230,118,0.3);
-    }
-    .indicator-ring.down {
-      background: rgba(255,23,68,0.08);
-      border: 1.5px solid rgba(255,23,68,0.3);
-      animation: ring-pulse 2s ease-in-out infinite;
-    }
-    .indicator-ring.pending {
-      background: rgba(255,145,0,0.08);
-      border: 1.5px solid rgba(255,145,0,0.3);
-    }
-    .indicator-ring.unknown {
-      background: rgba(74,83,112,0.2);
-      border: 1.5px solid var(--border);
-    }
-    @keyframes ring-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(255,23,68,0.3); }
-      50% { box-shadow: 0 0 0 6px rgba(255,23,68,0); }
-    }
-    .indicator-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .indicator-dot.up { background: var(--up); box-shadow: 0 0 8px var(--up); }
-    .indicator-dot.down { background: var(--down); box-shadow: 0 0 8px var(--down); }
-    .indicator-dot.pending { background: var(--pending); box-shadow: 0 0 8px var(--pending); }
-    .indicator-dot.unknown { background: var(--muted); }
-
-    /* Card info */
-    .card-info { min-width: 0; }
-    .card-name {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .card-url {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .card-tag {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 500;
-    }
-    .card-tag.up { background: rgba(0,230,118,0.1); color: var(--up); border: 1px solid rgba(0,230,118,0.2); }
-    .card-tag.down { background: rgba(255,23,68,0.1); color: var(--down); border: 1px solid rgba(255,23,68,0.2); }
-    .card-tag.pending { background: rgba(255,145,0,0.1); color: var(--pending); border: 1px solid rgba(255,145,0,0.2); }
-    .card-tag.unknown { background: rgba(74,83,112,0.2); color: var(--muted); border: 1px solid var(--border); }
-
-    /* History sparkline */
-    .card-history {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 36px;
-      width: 180px;
-    }
-    .spark {
-      flex: 1;
-      min-width: 3px;
-      border-radius: 2px 2px 0 0;
-      transition: opacity 0.15s, filter 0.15s;
-      cursor: default;
-      position: relative;
-    }
-    .spark:hover { opacity: 0.7; filter: brightness(1.3); }
-    .spark.up { background: linear-gradient(180deg, var(--up) 0%, rgba(0,230,118,0.4) 100%); }
-    .spark.down { background: linear-gradient(180deg, var(--down) 0%, rgba(255,23,68,0.4) 100%); }
-    .spark.empty { background: rgba(255,255,255,0.05); border-radius: 2px; }
-
-    /* Card right stats */
-    .card-stats {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      min-width: 70px;
-    }
-    .uptime-pct {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      font-family: var(--mono);
-      line-height: 1;
-    }
-    .uptime-pct.high { color: var(--up); }
-    .uptime-pct.mid { color: var(--warn); }
-    .uptime-pct.low { color: var(--down); }
-    .resp-time {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    /* ─── INCIDENT LOG ────────────────────────────────────── */
-    .incident-section { margin-top: 40px; }
-    .incident-list { display: flex; flex-direction: column; gap: 0; }
-    .incident-day {
-      display: flex;
-      gap: 20px;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-      opacity: 0;
-      animation: fade-up 0.5s ease forwards;
-    }
-    .incident-day:last-child { border-bottom: none; }
-    .incident-date {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      min-width: 80px;
-      padding-top: 2px;
-    }
-    .incident-content { flex: 1; }
-    .incident-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .incident-detail {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text2);
-    }
-    .no-incidents {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 20px 0;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .no-incidents-icon {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: rgba(0,230,118,0.08);
-      border: 1px solid rgba(0,230,118,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
-
-    /* ─── FOOTER ──────────────────────────────────────────── */
-    footer {
-      margin-top: 60px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-    }
-    .footer-brand { display: flex; align-items: center; gap: 8px; }
-    .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border-bright); }
-
-    /* ─── SKELETON LOADER ─────────────────────────────────── */
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface) 25%, rgba(255,255,255,0.06) 50%, var(--surface) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 6px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-    .card-skeleton {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    /* ─── TOOLTIP ─────────────────────────────────────────── */
-    [title] { position: relative; }
-
-    /* ─── SCROLLBAR ───────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
-
-    /* ─── RESPONSIVE ──────────────────────────────────────── */
-    @media (max-width: 680px) {
-      .card {
-        grid-template-columns: 36px 1fr auto;
-        grid-template-rows: auto auto;
-      }
-      .card-history { display: none; }
-      .hero-title { font-size: 28px; }
-      .stat-pill { min-width: 80px; }
-      .layout { padding: 0 16px 60px; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Damaju · Estado de servicios</title>
+<link rel="icon" href="https://damaju.com.co/wp-content/uploads/2026/02/Diseno-sin-titulo-2026-02-25T153654.803.png"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#070b12;--sur:rgba(255,255,255,.04);--sur2:rgba(255,255,255,.07);
+  --b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
+  --tx:#f0f4ff;--tx2:#8b95b0;--mu:#4a5370;
+  --up:#00e676;--dn:#ff1744;--ac:#00e5ff;
+  --r:14px;--mono:monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;font-size:14px;padding:0;margin:0;overflow-x:hidden;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.1;pointer-events:none;z-index:0;}
+.orb1{width:500px;height:500px;background:#00e5ff;top:-150px;left:-100px;animation:drift 18s ease-in-out infinite alternate;}
+.orb2{width:400px;height:400px;background:#7c3aed;bottom:-100px;right:-50px;animation:drift 18s ease-in-out infinite alternate;animation-delay:-9s;}
+@keyframes drift{to{transform:translate(30px,20px) scale(1.08);}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.hdr{background:rgba(7,11,18,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:13px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo img{height:30px;width:auto;}
+.sep{width:1px;height:15px;background:var(--b2);}
+.tag{font-family:var(--mono);font-size:9px;color:var(--mu);letter-spacing:.14em;text-transform:uppercase;}
+.live{display:flex;align-items:center;gap:6px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:999px;padding:4px 11px;font-family:var(--mono);font-size:9px;color:var(--up);}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--up);animation:ping 2s ease-out infinite;}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(0,230,118,.6);}70%{box-shadow:0 0 0 6px rgba(0,230,118,0);}100%{box-shadow:0 0 0 0 rgba(0,230,118,0);}}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 48px;position:relative;z-index:1;}
+.hero{padding:40px 0 26px;}
+.ey{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);margin-bottom:8px;opacity:0;animation:fu .6s ease forwards .1s;}
+.h1{font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:6px;opacity:0;animation:fu .6s ease forwards .2s;}
+.h1 .ok{color:var(--up);}
+.h1 .bad{color:var(--dn);}
+.sub{font-family:var(--mono);font-size:10px;color:var(--tx2);margin-bottom:22px;opacity:0;animation:fu .6s ease forwards .3s;}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;opacity:0;animation:fu .6s ease forwards .4s;}
+.st{background:var(--sur);border:1px solid var(--b);border-radius:var(--r);padding:12px 18px;min-width:85px;text-align:center;transition:border-color .2s,background .2s;}
+.st:hover{border-color:var(--b2);background:var(--sur2);}
+.sv{font-size:24px;font-weight:800;line-height:1;letter-spacing:-.02em;margin-bottom:3px;}
+.sv.g{color:var(--up);}
+.sv.b{color:var(--ac);}
+.sv.r{color:var(--dn);}
+.sl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);}
+.barlbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--mu);margin-bottom:5px;opacity:0;animation:fu .6s ease forwards .5s;}
+.bartr{height:3px;background:var(--sur);border-radius:999px;border:1px solid var(--b);opacity:0;animation:fu .6s ease forwards .5s;}
+.barf{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--up),var(--ac));transition:width 1.2s cubic-bezier(.19,1,.22,1);}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.shdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b);margin-bottom:12px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.card{background:var(--sur);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,background .2s,transform .18s,box-shadow .2s;opacity:0;animation:fu .45s ease both;}
+.card:hover{border-color:var(--b2);background:var(--sur2);transform:translateY(-2px);box-shadow:0 -3px 0 0 var(--ac),0 12px 32px rgba(0,0,0,.35);}
+.card.dn{border-color:rgba(255,23,68,.22);background:rgba(255,23,68,.03);}
+.card.dn:hover{box-shadow:0 -3px 0 0 var(--dn),0 12px 32px rgba(255,23,68,.12);}
+.card.pending{border-color:rgba(255,145,0,.22);background:rgba(255,145,0,.03);}
+.ctop{display:flex;align-items:center;gap:10px;}
+.ring{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ring.up{background:rgba(0,230,118,.08);border:1.5px solid rgba(0,230,118,.3);}
+.ring.dn{background:rgba(255,23,68,.08);border:1.5px solid rgba(255,23,68,.3);animation:rp 2s ease-in-out infinite;}
+.ring.pending{background:rgba(255,145,0,.08);border:1.5px solid rgba(255,145,0,.3);}
+.ring.unknown{background:rgba(74,83,112,.2);border:1.5px solid var(--b);}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(255,23,68,.3);}50%{box-shadow:0 0 0 5px rgba(255,23,68,0);}}
+.dot{width:9px;height:9px;border-radius:50%;}
+.dot.up{background:var(--up);box-shadow:0 0 6px var(--up);}
+.dot.dn{background:var(--dn);box-shadow:0 0 6px var(--dn);}
+.dot.pending{background:#ff9100;box-shadow:0 0 6px #ff9100;}
+.dot.unknown{background:var(--mu);}
+.cname{font-size:13px;font-weight:700;letter-spacing:-.01em;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ctag{font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 8px;border-radius:4px;letter-spacing:.06em;flex-shrink:0;}
+.ctag.up{background:rgba(0,230,118,.1);color:var(--up);border:1px solid rgba(0,230,118,.2);}
+.ctag.dn{background:rgba(255,23,68,.1);color:var(--dn);border:1px solid rgba(255,23,68,.2);}
+.ctag.pending{background:rgba(255,145,0,.1);color:#ff9100;border:1px solid rgba(255,145,0,.2);}
+.ctag.unknown{background:rgba(74,83,112,.2);color:var(--mu);border:1px solid var(--b);}
+.sparks{display:flex;align-items:flex-end;gap:2px;height:36px;}
+.sp{flex:1;min-width:2px;border-radius:2px 2px 0 0;}
+.sp.up{background:linear-gradient(180deg,var(--up),rgba(0,230,118,.25));}
+.sp.dn{background:linear-gradient(180deg,var(--dn),rgba(255,23,68,.25));}
+.sp.em{background:rgba(255,255,255,.05);border-radius:2px;}
+.cbot{display:flex;align-items:baseline;justify-content:space-between;gap:6px;}
+.cbot-url{font-family:var(--mono);font-size:9px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
+.cbot-nums{display:flex;align-items:baseline;gap:10px;flex-shrink:0;}
+.upct{font-family:var(--mono);font-size:15px;font-weight:700;}
+.upct.hi{color:var(--up);}
+.upct.md{color:#ffc400;}
+.upct.lo{color:var(--dn);}
+.ms{font-family:var(--mono);font-size:10px;color:var(--mu);}
+.skeleton{background:linear-gradient(90deg,var(--sur) 25%,rgba(255,255,255,.06) 50%,var(--sur) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.card-sk{background:var(--sur);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+.inc-row{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--b);opacity:0;animation:fu .4s ease both;}
+.inc-date{font-family:var(--mono);font-size:9px;color:var(--mu);min-width:80px;padding-top:2px;}
+.inc-name{font-size:12px;font-weight:600;margin-bottom:2px;}
+.inc-det{font-family:var(--mono);font-size:10px;color:var(--tx2);}
+.no-inc{display:flex;align-items:center;gap:10px;padding:16px 0;font-family:var(--mono);font-size:11px;color:var(--mu);}
+.ni-icon{width:28px;height:28px;border-radius:50%;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);display:flex;align-items:center;justify-content:center;font-size:12px;}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-family:var(--mono);font-size:9px;color:var(--mu);letter-spacing:.06em;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px;}
+@media(max-width:600px){.grid2{grid-template-columns:1fr;}.h1{font-size:26px;}.wrap{padding:0 14px 40px;}}
+</style>
 </head>
 <body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="grid-bg"></div>
 
-<div class="bg-canvas">
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-  <div class="bg-orb bg-orb-3"></div>
-</div>
-<div class="bg-grid"></div>
-
-<div class="header-wrap">
-  <div class="header-inner">
-    <a class="logo" href="#">
-      <img src="https://damaju.com.co/wp-content/uploads/2022/04/Diseno-sin-titulo-2026-02-25T152216.625.png" alt="Damaju" />
-      <div class="logo-sep"></div>
-      <span class="logo-tag">Status</span>
-    </a>
-    <div class="header-right">
-      <div class="live-badge"><div class="live-pulse"></div>En vivo</div>
-      <div id="last-updated">—</div>
-    </div>
+<div class="hdr">
+  <div class="logo">
+    <img src="https://damaju.com.co/wp-content/uploads/2022/04/Diseno-sin-titulo-2026-02-25T152216.625.png" alt="Damaju"/>
+    <div class="sep"></div>
+    <span class="tag">Status</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="live"><div class="pulse"></div>En vivo</div>
+    <span id="last-updated" style="font-family:monospace;font-size:9px;color:#4a5370;">—</span>
   </div>
 </div>
 
-<div class="layout">
+<div class="wrap">
   <div class="hero">
-    <div class="hero-top">
-      <div>
-        <div class="hero-eyebrow">— Estado del sistema</div>
-        <div class="hero-title" id="hero-title">
-          Todos los servicios<br>
-          <span class="status-word" id="status-word">operando</span>
-        </div>
-        <div class="hero-sub" id="hero-sub">Verificando estado…</div>
-      </div>
-      <div class="hero-stats" id="hero-stats">
-        <div class="stat-pill">
-          <div class="stat-val green" id="stat-up">—</div>
-          <div class="stat-lbl">Activos</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-val red" id="stat-down" style="display:none">—</div>
-          <div class="stat-val green" id="stat-down-ok">0</div>
-          <div class="stat-lbl">Caídos</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-val blue" id="stat-uptime">—</div>
-          <div class="stat-lbl">Uptime 24h</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-val" id="stat-ms" style="color:var(--text2)">—</div>
-          <div class="stat-lbl">Resp. prom.</div>
-        </div>
-      </div>
+    <div class="ey">— Estado del sistema</div>
+    <div class="h1" id="hero-title">Cargando servicios…</div>
+    <div class="sub" id="hero-sub">Leyendo status.json…</div>
+    <div class="stats">
+      <div class="st"><div class="sv g" id="stat-up">—</div><div class="sl">Activos</div></div>
+      <div class="st"><div class="sv g" id="stat-dn">—</div><div class="sl">Caídos</div></div>
+      <div class="st"><div class="sv b" id="stat-uptime">—</div><div class="sl">Uptime 24h</div></div>
+      <div class="st"><div class="sv" id="stat-ms" style="color:#8b95b0">—</div><div class="sl">Resp. prom.</div></div>
     </div>
-
-    <div class="status-bar-wrap">
-      <div class="status-bar-label">
-        <span>Disponibilidad general</span>
-        <span id="bar-pct">—</span>
-      </div>
-      <div class="status-bar-track">
-        <div class="status-bar-fill" id="status-bar" style="width:0%"></div>
-      </div>
-    </div>
+    <div class="barlbl"><span>Disponibilidad general</span><span id="bar-pct">—</span></div>
+    <div class="bartr"><div class="barf" id="bar-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="section-header">
-    <span class="section-title">Servicios monitoreados</span>
-    <span class="section-count" id="section-count">— servicios · revisión cada 5 min</span>
+  <div class="shdr">
+    <span>Servicios monitoreados</span>
+    <span id="section-count">— · cada 5 min</span>
   </div>
 
-  <div id="services" class="services">
-    <!-- Skeletons -->
-    ${Array(6).fill(0).map((_,i) => `
-    <div class="card-skeleton" style="animation-delay:${i*0.06}s">
-      <div class="skeleton" style="width:36px;height:36px;border-radius:50%;flex-shrink:0"></div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
-        <div class="skeleton" style="height:14px;width:40%"></div>
-        <div class="skeleton" style="height:10px;width:60%"></div>
-      </div>
-      <div class="skeleton" style="height:36px;width:180px"></div>
-      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <div class="skeleton" style="height:18px;width:48px"></div>
-        <div class="skeleton" style="height:10px;width:36px"></div>
-      </div>
-    </div>`).join('')}
+  <div class="grid2" id="services">
+    <div class="card-sk"><div style="display:flex;align-items:center;gap:10px;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div class="skeleton" style="height:13px;flex:1;"></div><div class="skeleton" style="height:18px;width:52px;border-radius:4px;"></div></div><div class="skeleton" style="height:36px;"></div><div style="display:flex;justify-content:space-between;"><div class="skeleton" style="height:10px;width:50%;"></div><div class="skeleton" style="height:15px;width:60px;"></div></div></div>
+    <div class="card-sk"><div style="display:flex;align-items:center;gap:10px;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div class="skeleton" style="height:13px;flex:1;"></div><div class="skeleton" style="height:18px;width:52px;border-radius:4px;"></div></div><div class="skeleton" style="height:36px;"></div><div style="display:flex;justify-content:space-between;"><div class="skeleton" style="height:10px;width:50%;"></div><div class="skeleton" style="height:15px;width:60px;"></div></div></div>
+    <div class="card-sk"><div style="display:flex;align-items:center;gap:10px;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div class="skeleton" style="height:13px;flex:1;"></div><div class="skeleton" style="height:18px;width:52px;border-radius:4px;"></div></div><div class="skeleton" style="height:36px;"></div><div style="display:flex;justify-content:space-between;"><div class="skeleton" style="height:10px;width:50%;"></div><div class="skeleton" style="height:15px;width:60px;"></div></div></div>
+    <div class="card-sk"><div style="display:flex;align-items:center;gap:10px;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div class="skeleton" style="height:13px;flex:1;"></div><div class="skeleton" style="height:18px;width:52px;border-radius:4px;"></div></div><div class="skeleton" style="height:36px;"></div><div style="display:flex;justify-content:space-between;"><div class="skeleton" style="height:10px;width:50%;"></div><div class="skeleton" style="height:15px;width:60px;"></div></div></div>
   </div>
 
-  <div class="incident-section">
-    <div class="section-header" style="margin-top:40px">
-      <span class="section-title">Registro de incidentes</span>
-      <span class="section-count" id="incident-count">Últimas 24h</span>
-    </div>
-    <div id="incidents" class="incident-list">
-      <div class="no-incidents">
-        <div class="no-incidents-icon">✓</div>
-        <span>Cargando historial de incidentes…</span>
-      </div>
-    </div>
+  <div style="margin-top:36px;">
+    <div class="shdr"><span>Registro de incidentes</span><span id="inc-count">Últimas 24h</span></div>
+    <div id="incidents"><div class="no-inc"><div class="ni-icon">↻</div><span>Cargando historial…</span></div></div>
   </div>
 
   <footer>
-    <div class="footer-brand">
-      <span>Damaju Status</span>
-      <div class="footer-dot"></div>
-      <span>GitHub Actions</span>
-      <div class="footer-dot"></div>
-      <span>GitHub Pages</span>
-    </div>
+    <span>Damaju Status · GitHub Actions · GitHub Pages</span>
     <span id="footer-ts">—</span>
   </footer>
 </div>
 
 <script>
-  const $ = id => document.getElementById(id);
-  const SERVICE_NAMES = {
-    'damaju': 'Tienda Principal',
-    'mando': 'Panel de Control',
-    'ops': 'Operaciones',
-    'app-marko': 'Marko App',
-    'intercom': 'Intercom',
-    'luma': 'Luma',
-    'marko': 'Marko',
-    'tracker': 'Tracker'
-  };
+const $=id=>document.getElementById(id);
+const NAMES={damaju:'Tienda Principal',mando:'Panel de Control',ops:'Operaciones','app-marko':'Marko App',intercom:'Intercom',luma:'Luma',marko:'Marko',tracker:'Tracker'};
+function getName(url){try{const sub=new URL(url).hostname.split('.')[0];return NAMES[sub]||(sub[0].toUpperCase()+sub.slice(1));}catch{return url;}}
+function fmtTime(iso){if(!iso)return'—';try{return new Date(iso).toLocaleString('es-CO',{timeZone:'America/Bogota',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true});}catch{return iso;}}
+function timeAgo(iso){if(!iso)return'—';try{const d=Math.floor((Date.now()-new Date(iso))/1000);if(d<60)return'hace '+d+'s';if(d<3600)return'hace '+Math.floor(d/60)+' min';if(d<86400)return'hace '+Math.floor(d/3600)+'h';return fmtTime(iso);}catch{return iso;}}
+function calcUp(h){if(!h||!h.length)return null;return(h.filter(x=>x&&x.up).length/h.length*100).toFixed(1);}
+function avgMs(h){if(!h||!h.length)return null;const v=h.filter(x=>x&&x.up&&x.response_time>0);return v.length?Math.round(v.reduce((a,x)=>a+x.response_time,0)/v.length):null;}
+function sparks(hist){const r=(hist||[]).slice(-64);let h='';const ph=64-r.length;for(let i=0;i<ph;i++)h+=`<div class="sp em" style="height:${4+Math.floor(Math.random()*5)}px"></div>`;for(const c of r){if(!c){h+=`<div class="sp em" style="height:4px"></div>`;continue;}const ht=c.up?Math.min(36,Math.max(8,36-Math.round(c.response_time/90))):5;const lbl=c.up?`✓ ${c.response_time}ms · ${fmtTime(c.timestamp)}`:`✗ Caído · ${fmtTime(c.timestamp)}`;h+=`<div class="sp ${c.up?'up':'dn'}" style="height:${ht}px" title="${lbl}"></div>`;}return h;}
+function buildInc(svcs){const incs=[];for(const[url,svc]of Object.entries(svcs)){const hist=svc.history||[];let ds=null;for(const h of hist){if(!h)continue;if(!h.up&&ds===null)ds=h.timestamp;if(h.up&&ds!==null){const dur=new Date(h.timestamp)-new Date(ds);incs.push({name:getName(url),start:ds,end:h.timestamp,dur:dur<60000?Math.floor(dur/1000)+'s':Math.floor(dur/60000)+'m'});ds=null;}}if(ds!==null)incs.push({name:getName(url),start:ds,end:null,dur:'En curso'});}return incs.sort((a,b)=>new Date(b.start)-new Date(a.start)).slice(0,10);}
 
-  function getServiceName(url) {
-    try {
-      const h = new URL(url).hostname;
-      const sub = h.split('.')[0];
-      return SERVICE_NAMES[sub] || (sub.charAt(0).toUpperCase() + sub.slice(1));
-    } catch { return url; }
-  }
-
-  function fmtTime(iso) {
-    if (!iso) return '—';
-    try {
-      return new Date(iso).toLocaleString('es-CO', {
-        timeZone: 'America/Bogota',
-        day: '2-digit', month: 'short',
-        hour: '2-digit', minute: '2-digit', hour12: true
-      });
-    } catch { return iso; }
-  }
-
-  function fmtTimeAgo(iso) {
-    if (!iso) return '—';
-    try {
-      const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
-      if (diff < 60) return 'hace ' + diff + 's';
-      if (diff < 3600) return 'hace ' + Math.floor(diff/60) + ' min';
-      if (diff < 86400) return 'hace ' + Math.floor(diff/3600) + 'h';
-      return fmtTime(iso);
-    } catch { return iso; }
-  }
-
-  function calcUptime(history) {
-    if (!history || !history.length) return null;
-    return (history.filter(h => h && h.up).length / history.length * 100).toFixed(1);
-  }
-
-  function avgRespTime(history) {
-    if (!history || !history.length) return null;
-    const valid = history.filter(h => h && h.up && h.response_time > 0);
-    if (!valid.length) return null;
-    return Math.round(valid.reduce((a,h) => a + h.response_time, 0) / valid.length);
-  }
-
-  function renderSparks(history) {
-    const recent = (history || []).slice(-60);
-    const placeholder = 60 - recent.length;
-    let html = '';
-    for (let i = 0; i < placeholder; i++) {
-      html += `<div class="spark empty" style="height:${Math.floor(Math.random()*8+4)}px"></div>`;
-    }
-    for (const c of recent) {
-      if (!c) { html += `<div class="spark empty" style="height:4px"></div>`; continue; }
-      const maxH = 36;
-      const h = c.up ? Math.min(maxH, Math.max(8, Math.round(maxH - (c.response_time / 100)))) : 6;
-      const label = c.up ? `✓ ${c.response_time}ms · ${fmtTime(c.timestamp)}` : `✗ Caído · ${fmtTime(c.timestamp)}`;
-      html += `<div class="spark ${c.up ? 'up' : 'down'}" style="height:${h}px" title="${label}"></div>`;
-    }
-    return html;
-  }
-
-  function buildIncidents(services) {
-    const incidents = [];
-    for (const [url, svc] of Object.entries(services)) {
-      const history = svc.history || [];
-      let downStart = null;
-      for (let i = 0; i < history.length; i++) {
-        const h = history[i];
-        if (!h) continue;
-        if (!h.up && downStart === null) downStart = h.timestamp;
-        if (h.up && downStart !== null) {
-          const durMs = new Date(h.timestamp) - new Date(downStart);
-          const dur = durMs < 60000 ? Math.floor(durMs/1000)+'s' : Math.floor(durMs/60000)+'m';
-          incidents.push({ url, name: getServiceName(url), start: downStart, end: h.timestamp, dur });
-          downStart = null;
-        }
-      }
-      if (downStart !== null) {
-        incidents.push({ url, name: getServiceName(url), start: downStart, end: null, dur: 'En curso' });
-      }
-    }
-    incidents.sort((a, b) => new Date(b.start) - new Date(a.start));
-    return incidents.slice(0, 10);
-  }
-
-  function render(data) {
-    const services = data.services || {};
-    const urls = Object.keys(services);
-    const downUrls = urls.filter(u => services[u]?.current && !services[u].current.up);
-    const pendingUrls = urls.filter(u => services[u]?.pending_down);
-    const allOk = downUrls.length === 0;
-
-    // Hero
-    const sw = $('status-word');
-    if (allOk) {
-      sw.textContent = 'operando normalmente';
-      sw.className = 'status-word ok';
-    } else {
-      sw.textContent = `${downUrls.length} con problemas`;
-      sw.className = 'status-word down';
-    }
-    $('hero-sub').textContent = `Última revisión ${fmtTimeAgo(data.last_updated)} · ${urls.length} servicios monitoreados`;
-
-    // Stats
-    $('stat-up').textContent = urls.length - downUrls.length;
-    if (downUrls.length > 0) {
-      $('stat-down').style.display = 'block';
-      $('stat-down-ok').style.display = 'none';
-      $('stat-down').textContent = downUrls.length;
-    } else {
-      $('stat-down').style.display = 'none';
-      $('stat-down-ok').style.display = 'block';
-    }
-
-    let totalUptime = 0, countU = 0, totalMs = 0, countMs = 0;
-    urls.forEach(u => {
-      const up = calcUptime(services[u]?.history || []);
-      if (up !== null) { totalUptime += parseFloat(up); countU++; }
-      const ms = avgRespTime(services[u]?.history || []);
-      if (ms !== null) { totalMs += ms; countMs++; }
-    });
-    const avgUp = countU ? (totalUptime / countU).toFixed(1) : '—';
-    const avgMs = countMs ? Math.round(totalMs / countMs) : '—';
-    $('stat-uptime').textContent = avgUp !== '—' ? avgUp + '%' : '—';
-    $('stat-ms').textContent = avgMs !== '—' ? avgMs + 'ms' : '—';
-
-    // Progress bar
-    if (avgUp !== '—') {
-      $('status-bar').style.width = avgUp + '%';
-      $('bar-pct').textContent = avgUp + '%';
-    }
-
-    // Timestamps
-    const lu = fmtTime(data.last_updated);
-    $('last-updated').textContent = fmtTimeAgo(data.last_updated);
-    $('footer-ts').textContent = 'Último check: ' + lu;
-    $('section-count').textContent = `${urls.length} servicios · revisión cada 5 min`;
-
-    // Cards
-    $('services').innerHTML = urls.map((url, i) => {
-      const svc = services[url] || {};
-      const cur = svc.current;
-      const isDown = cur && !cur.up;
-      const isPending = svc.pending_down;
-      const uptime = calcUptime(svc.history || []);
-      const ms = cur ? cur.response_time : null;
-      const uptimeNum = uptime ? parseFloat(uptime) : null;
-      const uptimeCls = uptimeNum === null ? '' : uptimeNum >= 99 ? 'high' : uptimeNum < 95 ? 'low' : 'mid';
-      const statusCls = isDown ? 'down' : isPending ? 'pending' : cur ? 'up' : 'unknown';
-      const tagTxt = isDown ? 'CAÍDO' : isPending ? 'VERIFICANDO' : cur ? 'ACTIVO' : 'PENDIENTE';
-
-      return `<div class="card${isDown ? ' is-down' : isPending ? ' is-pending' : ''}" style="animation-delay:${i * 0.06}s">
-        <div class="card-indicator">
-          <div class="indicator-ring ${statusCls}">
-            <div class="indicator-dot ${statusCls}"></div>
-          </div>
+function render(data){
+  const svcs=data.services||{};
+  const urls=Object.keys(svcs);
+  const dnUrls=urls.filter(u=>svcs[u]?.current&&!svcs[u].current.up);
+  const allOk=dnUrls.length===0;
+  const ht=$('hero-title');
+  ht.innerHTML=allOk?'Todos los servicios<br><span class="ok">operando normalmente</span>':`${dnUrls.length} servicio${dnUrls.length>1?'s':''}<br><span class="bad">con problemas</span>`;
+  $('hero-sub').textContent=`Última revisión ${timeAgo(data.last_updated)} · ${urls.length} servicios monitoreados`;
+  $('stat-up').textContent=urls.length-dnUrls.length;
+  const dnel=$('stat-dn');dnel.textContent=dnUrls.length;dnel.className='sv '+(dnUrls.length>0?'r':'g');
+  let tu=0,cu=0,tm=0,cm=0;
+  urls.forEach(u=>{const up=calcUp(svcs[u]?.history||[]);if(up!==null){tu+=parseFloat(up);cu++;}const ms=avgMs(svcs[u]?.history||[]);if(ms!==null){tm+=ms;cm++;}});
+  const avgU=cu?(tu/cu).toFixed(1):'—';const avgM=cm?Math.round(tm/cm):'—';
+  $('stat-uptime').textContent=avgU!=='—'?avgU+'%':'—';
+  $('stat-ms').textContent=avgM!=='—'?avgM+'ms':'—';
+  if(avgU!=='—'){$('bar-fill').style.width=avgU+'%';$('bar-pct').textContent=avgU+'%';}
+  $('last-updated').textContent=timeAgo(data.last_updated);
+  $('footer-ts').textContent='Último check: '+fmtTime(data.last_updated);
+  $('section-count').textContent=`${urls.length} servicios · cada 5 min`;
+  $('services').innerHTML=urls.map((url,i)=>{
+    const svc=svcs[url]||{};const cur=svc.current;
+    const isDown=cur&&!cur.up;const isPending=svc.pending_down;
+    const up=calcUp(svc.history||[]);const upNum=up?parseFloat(up):null;
+    const upCls=upNum===null?'':upNum>=99?'hi':upNum<95?'lo':'md';
+    const sCls=isDown?'dn':isPending?'pending':cur?'up':'unknown';
+    const tagTxt=isDown?'CAÍDO':isPending?'VERIF…':cur?'ACTIVO':'—';
+    const ms=cur&&cur.response_time>0?cur.response_time:null;
+    return `<div class="card${isDown?' dn':isPending?' pending':''}" style="animation-delay:${i*.05}s">
+      <div class="ctop">
+        <div class="ring ${sCls}"><div class="dot ${sCls}"></div></div>
+        <span class="cname">${getName(url)}</span>
+        <span class="ctag ${sCls}">${tagTxt}</span>
+      </div>
+      <div class="sparks">${sparks(svc.history||[])}</div>
+      <div class="cbot">
+        <span class="cbot-url">${url.replace('https://','')}</span>
+        <div class="cbot-nums">
+          ${up!==null?`<span class="upct ${upCls}">${up}%</span>`:'<span class="upct" style="color:#4a5370">—</span>'}
+          <span class="ms">${ms!==null?ms+'ms':'—'}</span>
         </div>
-        <div class="card-info">
-          <div class="card-name">${getServiceName(url)}</div>
-          <div class="card-url">${url}</div>
-          <div class="card-meta">
-            <span class="card-tag ${statusCls}">${tagTxt}</span>
-            ${isDown && cur?.timestamp ? `<span style="font-family:var(--mono);font-size:9px;color:var(--down)">desde ${fmtTimeAgo(cur.timestamp)}</span>` : ''}
-            ${isPending ? `<span style="font-family:var(--mono);font-size:9px;color:var(--pending)">Doble verificación activa</span>` : ''}
-          </div>
-        </div>
-        <div class="card-history">${renderSparks(svc.history || [])}</div>
-        <div class="card-stats">
-          ${uptime !== null ? `<div class="uptime-pct ${uptimeCls}">${uptime}%</div>` : '<div class="uptime-pct" style="color:var(--muted)">—</div>'}
-          <div class="resp-time">${ms !== null && ms > 0 ? ms + 'ms' : '—'}</div>
-        </div>
-      </div>`;
-    }).join('');
+      </div>
+    </div>`;
+  }).join('');
+  const incs=buildInc(svcs);
+  $('inc-count').textContent=incs.length?`${incs.length} incidente${incs.length>1?'s':''} recientes`:'Últimas 24h';
+  $('incidents').innerHTML=!incs.length
+    ?`<div class="no-inc"><div class="ni-icon">✓</div><span>Sin incidentes en los últimos 7 días</span></div>`
+    :incs.map((inc,i)=>`<div class="inc-row" style="animation-delay:${i*.05}s"><div class="inc-date">${fmtTime(inc.start)}</div><div><div class="inc-name" style="color:${inc.end?'#8b95b0':'#ff1744'}">${inc.end?'✓':'⚠'} ${inc.name} — ${inc.end?'Resuelto':'En curso'}</div><div class="inc-det">Duración: ${inc.dur}${inc.end?' · Recuperado: '+fmtTime(inc.end):''}</div></div></div>`).join('');
+}
 
-    // Incidents
-    const incidents = buildIncidents(services);
-    const incEl = $('incidents');
-    if (!incidents.length) {
-      incEl.innerHTML = `<div class="no-incidents">
-        <div class="no-incidents-icon">✓</div>
-        <span>Sin incidentes registrados en los últimos 7 días</span>
-      </div>`;
-    } else {
-      $('incident-count').textContent = `${incidents.length} incidente${incidents.length !== 1 ? 's' : ''} recientes`;
-      incEl.innerHTML = incidents.map((inc, i) => `
-        <div class="incident-day" style="animation-delay:${i*0.05}s">
-          <div class="incident-date">${fmtTime(inc.start)}</div>
-          <div class="incident-content">
-            <div class="incident-title" style="color:${inc.end ? 'var(--text2)' : 'var(--down)'}">
-              ${inc.end ? '✓' : '⚠'} ${inc.name} — ${inc.end ? 'Resuelto' : 'En curso'}
-            </div>
-            <div class="incident-detail">
-              Duración: ${inc.dur}${inc.end ? ' · Recuperado: ' + fmtTime(inc.end) : ''}
-            </div>
-          </div>
-        </div>`).join('');
-    }
-  }
-
-  async function load() {
-    try {
-      const res = await fetch('status.json?t=' + Date.now());
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      render(await res.json());
-    } catch (err) {
-      $('services').innerHTML = `<div style="padding:32px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--down)">
-        ⚠ No se pudo cargar status.json — ${err.message}
-      </div>`;
-    }
-  }
-
-  load();
-  setInterval(load, 60000);
+async function load(){
+  try{const res=await fetch('status.json?t='+Date.now());if(!res.ok)throw new Error('HTTP '+res.status);render(await res.json());}
+  catch(err){$('hero-title').innerHTML='<span class="bad">Error al cargar datos</span>';$('hero-sub').textContent=err.message;}
+}
+load();setInterval(load,60000);
 </script>
 </body>
 </html>
