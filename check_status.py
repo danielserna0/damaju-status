@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import requests
 
@@ -83,12 +83,24 @@ def send_telegram(message):
 def build_alert(url, result, went_down):
     icon = "🔴" if went_down else "🟢"
     label = service_name(url)
-    status = "DOWN" if went_down else "BACK UP"
+    status = "CAÍDO" if went_down else "RECUPERADO"
     code = result.get("status_code", 0)
     ms = result.get("response_time", 0)
     err = result.get("error", "")
-    detail = f"HTTP {code} · {ms}ms" if not err else f"Error: {err}"
-    return f"{icon} <b>Damaju Status Alert</b>\nService: <b>{label}</b>\nURL: {url}\nStatus: <b>{status}</b>\nDetail: {detail}\nTime: {result['timestamp']}"
+    
+    # Formatear fecha hora Colombia
+    try:
+        dt_colombia = datetime.fromisoformat(result['timestamp']).astimezone(timezone(timedelta(hours=-5)))
+        time_str = dt_colombia.strftime('%d/%m %H:%M')
+    except:
+        time_str = result['timestamp']
+    
+    if err:
+        detail = f"Error: {err}"
+    else:
+        detail = f"HTTP {code} · {ms}ms"
+    
+    return f"{icon} <b>{label}</b>\n{status}\n{detail}\n{time_str}"
 
 def main():
     print(f"[{now_iso()}] 🚀 Iniciando monitoreo de {len(SITES)} servicios")
