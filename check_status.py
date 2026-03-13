@@ -71,41 +71,57 @@ def check_site(url):
             else:
                 return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
-def send_telegram(message):
+def send_telegram_with_button(message):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         return
+    
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    
+    keyboard = {
+        "inline_keyboard": [[
+            {"text": "🔍 Revisar", "url": "https://status.damaju.com.co/"}
+        ]]
+    }
+    
     try:
-        requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}, timeout=10)
+        requests.post(url, json={
+            "chat_id": TELEGRAM_CHAT_ID, 
+            "text": message, 
+            "parse_mode": "HTML",
+            "reply_markup": keyboard
+        }, timeout=10)
     except Exception as exc:
         print(f"Telegram error: {exc}")
 
-def build_alert(url, result, went_down):
-    icon = "🔴" if went_down else "🟢"
-    label = service_name(url)
-    status = "CAÍDO" if went_down else "RECUPERADO"
-    code = result.get("status_code", 0)
-    ms = result.get("response_time", 0)
-    err = result.get("error", "")
+def build_alert(down_sites, timestamp):
+    if not down_sites:
+        return None
+    
+    icon = "🔴"
+    count = len(down_sites)
+    
+    # Formatear lista de sitios
+    if count <= 3:
+        sites_list = ", ".join([service_name(url).replace('.damaju.com.co', '').replace('.com.co', '') for url in down_sites])
+    else:
+        first_three = ", ".join([service_name(url).replace('.damaju.com.co', '').replace('.com.co', '') for url in down_sites[:3]])
+        sites_list = f"{first_three} y {count - 3} más..."
     
     # Formatear fecha hora Colombia
     try:
-        dt_colombia = datetime.fromisoformat(result['timestamp']).astimezone(timezone(timedelta(hours=-5)))
+        dt_colombia = datetime.fromisoformat(timestamp).astimezone(timezone(timedelta(hours=-5)))
         time_str = dt_colombia.strftime('%d/%m %H:%M')
     except:
-        time_str = result['timestamp']
+        time_str = timestamp
     
-    if err:
-        detail = f"Error: {err}"
-    else:
-        detail = f"HTTP {code} · {ms}ms"
-    
-    return f"{icon} <b>{label}</b>\n{status}\n{detail}\n{time_str}"
+    return f"{icon} Damaju Status\nCAÍDO: {sites_list}\n{time_str}"
 
 def main():
     print(f"[{now_iso()}] 🚀 Iniciando monitoreo de {len(SITES)} servicios")
     data = load_status()
     services = data.setdefault("services", {})
+    
+    confirmed_down_sites = []
 
     for url in SITES:
         print(f"\n[{now_iso()}] 🔍 Revisando {url}")
@@ -122,16 +138,10 @@ def main():
             if result["up"]:
                 # Está arriba ahora
                 if not previous.get("up", True):
-                    # Estaba DOWN confirmado → alertar que volvió
+                    # Estaba DOWN confirmado → registrar recuperación
                     downtime = datetime.fromisoformat(result['timestamp']) - datetime.fromisoformat(previous['timestamp'])
                     print(f"  ⏰ Downtime: {downtime.total_seconds():.1f}s")
-                    
-                    # Solo alertar si el downtime fue significativo (> 30 segundos)
-                    if downtime.total_seconds() > 30:
-                        print(f"  🟢 ENVIANDO ALERTA DE RECUPERACIÓN (downtime significativo)")
-                        send_telegram(build_alert(url, result, went_down=False))
-                    else:
-                        print(f"  ⚠️ NO ALERTAR: downtime muy corto ({downtime.total_seconds():.1f}s)")
+                    print(f"  🟢 RECUPERADO (downtime: {downtime.total_seconds():.1f}s)")
                         
                 elif pending_down:
                     # Estaba pending_down pero se recuperó → no alertar, solo limpiar
@@ -140,9 +150,9 @@ def main():
             else:
                 # Está abajo ahora
                 if pending_down:
-                    # Ya falló el run anterior también → confirmar DOWN y alertar
-                    print(f"  🔴 CONFIRMADO DOWN (2 ejecuciones consecutivas) → ENVIANDO ALERTA")
-                    send_telegram(build_alert(url, result, went_down=True))
+                    # Ya falló el run anterior también → confirmar DOWN
+                    print(f"  🔴 CONFIRMADO DOWN (2 ejecuciones consecutivas)")
+                    confirmed_down_sites.append(url)
                     entry["pending_down"] = False
                 elif previous.get("up", True):
                     # Primera vez que falla → marcar pending, NO alertar todavía
@@ -154,6 +164,15 @@ def main():
         entry["history"].append(result)
         if len(entry["history"]) > MAX_HISTORY:
             entry["history"] = entry["history"][-MAX_HISTORY:]
+
+    # Enviar alerta grupal si hay sitios confirmados caídos
+    if confirmed_down_sites:
+        alert_message = build_alert(confirmed_down_sites, now_iso())
+        if alert_message:
+            print(f"\n📢 ENVIANDO ALERTA GRUPAL: {len(confirmed_down_sites)} sitios caídos")
+            send_telegram_with_button(alert_message)
+    else:
+        print(f"\n✅ Todos los servicios operativos, sin alertas")
 
     data["last_updated"] = now_iso()
     save_status(data)
