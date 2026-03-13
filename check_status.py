@@ -43,25 +43,33 @@ def service_name(url):
 
 def check_site(url):
     ts = now_iso()
-    try:
-        start = time.monotonic()
-        resp = requests.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True, headers=HEADERS)
-        elapsed_ms = round((time.monotonic() - start) * 1000)
-        up = resp.status_code < 500
-        return {"up": up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
-    except Exception:
-        # Primer fallo — esperar y reintentar dentro del mismo run
-        time.sleep(15)
+    first_error = None
+    
+    for attempt in range(2):
         try:
             start = time.monotonic()
             resp = requests.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True, headers=HEADERS)
             elapsed_ms = round((time.monotonic() - start) * 1000)
             up = resp.status_code < 500
+            
+            if attempt == 1 and first_error:
+                print(f"  ✅ Recuperado en segundo intento después de: {first_error}")
+            
             return {"up": up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
+            
         except requests.exceptions.Timeout:
-            return {"up": False, "status_code": 0, "response_time": TIMEOUT_SECONDS * 1000, "timestamp": ts, "error": "timeout"}
+            first_error = first_error or f"timeout (intento {attempt + 1})"
+            if attempt == 0:
+                time.sleep(15)
+            else:
+                return {"up": False, "status_code": 0, "response_time": TIMEOUT_SECONDS * 1000, "timestamp": ts, "error": "timeout"}
+                
         except requests.exceptions.RequestException as exc:
-            return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
+            first_error = first_error or f"{type(exc).__name__}: {str(exc)[:50]} (intento {attempt + 1})"
+            if attempt == 0:
+                time.sleep(15)
+            else:
+                return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
 def send_telegram(message):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
@@ -83,38 +91,50 @@ def build_alert(url, result, went_down):
     return f"{icon} <b>Damaju Status Alert</b>\nService: <b>{label}</b>\nURL: {url}\nStatus: <b>{status}</b>\nDetail: {detail}\nTime: {result['timestamp']}"
 
 def main():
+    print(f"[{now_iso()}] 🚀 Iniciando monitoreo de {len(SITES)} servicios")
     data = load_status()
     services = data.setdefault("services", {})
 
     for url in SITES:
-        print(f"Checking {url}")
+        print(f"\n[{now_iso()}] 🔍 Revisando {url}")
         result = check_site(url)
-        print(f"  up={result['up']} code={result['status_code']} ms={result['response_time']}")
+        print(f"  📊 Estado: up={result['up']} code={result['status_code']} ms={result['response_time']}")
 
         entry = services.setdefault(url, {"current": None, "history": [], "pending_down": False})
         previous = entry.get("current")
         pending_down = entry.get("pending_down", False)
+
+        print(f"  📋 Anterior: up={previous.get('up') if previous else 'None'} | pending_down={pending_down}")
 
         if previous is not None:
             if result["up"]:
                 # Está arriba ahora
                 if not previous.get("up", True):
                     # Estaba DOWN confirmado → alertar que volvió
-                    send_telegram(build_alert(url, result, went_down=False))
+                    downtime = datetime.fromisoformat(result['timestamp']) - datetime.fromisoformat(previous['timestamp'])
+                    print(f"  ⏰ Downtime: {downtime.total_seconds():.1f}s")
+                    
+                    # Solo alertar si el downtime fue significativo (> 30 segundos)
+                    if downtime.total_seconds() > 30:
+                        print(f"  🟢 ENVIANDO ALERTA DE RECUPERACIÓN (downtime significativo)")
+                        send_telegram(build_alert(url, result, went_down=False))
+                    else:
+                        print(f"  ⚠️ NO ALERTAR: downtime muy corto ({downtime.total_seconds():.1f}s)")
+                        
                 elif pending_down:
                     # Estaba pending_down pero se recuperó → no alertar, solo limpiar
-                    print(f"  Recovered before confirmation, no alert sent")
+                    print(f"  ✅ Recuperado antes de confirmación, sin alerta")
                 entry["pending_down"] = False
             else:
                 # Está abajo ahora
                 if pending_down:
                     # Ya falló el run anterior también → confirmar DOWN y alertar
-                    print(f"  Confirmed DOWN (2 consecutive runs), sending alert")
+                    print(f"  🔴 CONFIRMADO DOWN (2 ejecuciones consecutivas) → ENVIANDO ALERTA")
                     send_telegram(build_alert(url, result, went_down=True))
                     entry["pending_down"] = False
                 elif previous.get("up", True):
                     # Primera vez que falla → marcar pending, NO alertar todavía
-                    print(f"  First failure, marking pending_down, waiting for next run")
+                    print(f"  ⚠️ Primer fallo → marcando pending_down, esperar siguiente ejecución")
                     entry["pending_down"] = True
                 # Si previous ya era down y pending_down=False, ya se alertó antes, no hacer nada
 
@@ -125,7 +145,7 @@ def main():
 
     data["last_updated"] = now_iso()
     save_status(data)
-    print(f"Done. Updated at {data['last_updated']}")
+    print(f"\n[{now_iso()}] ✅ Monitoreo completado. Actualizado: {data['last_updated']}")
 
 if __name__ == "__main__":
     main()

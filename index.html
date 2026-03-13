@@ -150,14 +150,14 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--b);display:fl
   </div>
 
   <footer>
-    <span>Damaju Status · GitHub Actions · GitHub Pages</span>
+    <span>Damaju Status Global</span>
     <span id="footer-ts">—</span>
   </footer>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const NAMES={damaju:'Tienda Principal',mando:'Panel de Control',ops:'Operaciones','app-marko':'Marko App',intercom:'Intercom',luma:'Luma',marko:'Marko',tracker:'Tracker'};
+const NAMES={damaju:'Tienda Principal',mando:'Panel de Control',ops:'Personal Manager','app-marko':'Marko App',intercom:'Intercomunicador',luma:'Luma',marko:'Marko',tracker:'Tracker'};
 function getName(url){try{const sub=new URL(url).hostname.split('.')[0];return NAMES[sub]||(sub[0].toUpperCase()+sub.slice(1));}catch{return url;}}
 function fmtTime(iso){if(!iso)return'—';try{return new Date(iso).toLocaleString('es-CO',{timeZone:'America/Bogota',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true});}catch{return iso;}}
 function timeAgo(iso){if(!iso)return'—';try{const d=Math.floor((Date.now()-new Date(iso))/1000);if(d<60)return'hace '+d+'s';if(d<3600)return'hace '+Math.floor(d/60)+' min';if(d<86400)return'hace '+Math.floor(d/3600)+'h';return fmtTime(iso);}catch{return iso;}}
@@ -184,7 +184,7 @@ function render(data){
   if(avgU!=='—'){$('bar-fill').style.width=avgU+'%';$('bar-pct').textContent=avgU+'%';}
   $('last-updated').textContent=timeAgo(data.last_updated);
   $('footer-ts').textContent='Último check: '+fmtTime(data.last_updated);
-  $('section-count').textContent=`${urls.length} servicios · cada 5 min`;
+  $('section-count').textContent=`${urls.length} servicios · cada 5 m`;
   $('services').innerHTML=urls.map((url,i)=>{
     const svc=svcs[url]||{};const cur=svc.current;
     const isDown=cur&&!cur.up;const isPending=svc.pending_down;
