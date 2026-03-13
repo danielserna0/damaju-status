@@ -17,7 +17,7 @@ SITES = [
 ]
 
 TIMEOUT_SECONDS = 10
-MAX_HISTORY = 288
+MAX_HISTORY = 2016
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}
 STATUS_FILE = Path(__file__).parent / "status.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
@@ -50,6 +50,7 @@ def check_site(url):
         up = resp.status_code < 500
         return {"up": up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
     except Exception:
+        # Primer fallo — esperar y reintentar dentro del mismo run
         time.sleep(15)
         try:
             start = time.monotonic()
@@ -84,21 +85,44 @@ def build_alert(url, result, went_down):
 def main():
     data = load_status()
     services = data.setdefault("services", {})
+
     for url in SITES:
         print(f"Checking {url}")
         result = check_site(url)
         print(f"  up={result['up']} code={result['status_code']} ms={result['response_time']}")
-        entry = services.setdefault(url, {"current": None, "history": []})
+
+        entry = services.setdefault(url, {"current": None, "history": [], "pending_down": False})
         previous = entry.get("current")
+        pending_down = entry.get("pending_down", False)
+
         if previous is not None:
-            if previous.get("up", True) and not result["up"]:
-                send_telegram(build_alert(url, result, went_down=True))
-            elif not previous.get("up", True) and result["up"]:
-                send_telegram(build_alert(url, result, went_down=False))
+            if result["up"]:
+                # Está arriba ahora
+                if not previous.get("up", True):
+                    # Estaba DOWN confirmado → alertar que volvió
+                    send_telegram(build_alert(url, result, went_down=False))
+                elif pending_down:
+                    # Estaba pending_down pero se recuperó → no alertar, solo limpiar
+                    print(f"  Recovered before confirmation, no alert sent")
+                entry["pending_down"] = False
+            else:
+                # Está abajo ahora
+                if pending_down:
+                    # Ya falló el run anterior también → confirmar DOWN y alertar
+                    print(f"  Confirmed DOWN (2 consecutive runs), sending alert")
+                    send_telegram(build_alert(url, result, went_down=True))
+                    entry["pending_down"] = False
+                elif previous.get("up", True):
+                    # Primera vez que falla → marcar pending, NO alertar todavía
+                    print(f"  First failure, marking pending_down, waiting for next run")
+                    entry["pending_down"] = True
+                # Si previous ya era down y pending_down=False, ya se alertó antes, no hacer nada
+
         entry["current"] = result
         entry["history"].append(result)
         if len(entry["history"]) > MAX_HISTORY:
             entry["history"] = entry["history"][-MAX_HISTORY:]
+
     data["last_updated"] = now_iso()
     save_status(data)
     print(f"Done. Updated at {data['last_updated']}")
