@@ -1,0 +1,17 @@
+{
+  "sites": [
+    "https://app-marko.damaju.com.co",
+    "https://damaju.com.co",
+    "https://intercom.damaju.com.co/",
+    "https://luma.damaju.com.co",
+    "https://mando.damaju.com.co",
+    "https://marko.damaju.com.co",
+    "https://ops.damaju.com.co",
+    "https://tracker.damaju.com.co"
+  ],
+  "timeout_seconds": 60,
+  "max_history": 2016,
+  "alert_threshold": 2,
+  "user_agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)",
+  "dashboard_url": "https://status.damaju.com.co/"
+}
