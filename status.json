@@ -1,12 +1,13 @@
 {
-  "last_updated": "2026-03-14T00:20:45+00:00",
+  "last_updated": "2026-03-14T00:30:22+00:00",
   "services": {
     "https://app-marko.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 309,
-        "timestamp": "2026-03-14T00:20:42+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 0,
+        "timestamp": "2026-03-14T00:25:41+00:00",
+        "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
       },
       "history": [
         {
@@ -437,16 +438,24 @@
           "status_code": 200,
           "response_time": 309,
           "timestamp": "2026-03-14T00:20:42+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-14T00:25:41+00:00",
+          "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 353,
-        "timestamp": "2026-03-14T00:20:42+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 0,
+        "timestamp": "2026-03-14T00:26:16+00:00",
+        "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
       },
       "history": [
         {
@@ -877,16 +886,24 @@
           "status_code": 200,
           "response_time": 353,
           "timestamp": "2026-03-14T00:20:42+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-14T00:26:16+00:00",
+          "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://intercom.damaju.com.co/": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 265,
-        "timestamp": "2026-03-14T00:20:43+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 10000,
+        "timestamp": "2026-03-14T00:26:51+00:00",
+        "error": "timeout"
       },
       "history": [
         {
@@ -1317,16 +1334,24 @@
           "status_code": 200,
           "response_time": 265,
           "timestamp": "2026-03-14T00:20:43+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 10000,
+          "timestamp": "2026-03-14T00:26:51+00:00",
+          "error": "timeout"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://luma.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 364,
-        "timestamp": "2026-03-14T00:20:43+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 10000,
+        "timestamp": "2026-03-14T00:27:27+00:00",
+        "error": "timeout"
       },
       "history": [
         {
@@ -1757,16 +1782,24 @@
           "status_code": 200,
           "response_time": 364,
           "timestamp": "2026-03-14T00:20:43+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 10000,
+          "timestamp": "2026-03-14T00:27:27+00:00",
+          "error": "timeout"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://mando.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 413,
-        "timestamp": "2026-03-14T00:20:43+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 0,
+        "timestamp": "2026-03-14T00:28:02+00:00",
+        "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
       },
       "history": [
         {
@@ -2197,16 +2230,24 @@
           "status_code": 200,
           "response_time": 413,
           "timestamp": "2026-03-14T00:20:43+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-14T00:28:02+00:00",
+          "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://marko.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 465,
-        "timestamp": "2026-03-14T00:20:44+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 0,
+        "timestamp": "2026-03-14T00:28:37+00:00",
+        "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
       },
       "history": [
         {
@@ -2637,16 +2678,24 @@
           "status_code": 200,
           "response_time": 465,
           "timestamp": "2026-03-14T00:20:44+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-14T00:28:37+00:00",
+          "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://ops.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 266,
-        "timestamp": "2026-03-14T00:20:44+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 10000,
+        "timestamp": "2026-03-14T00:29:12+00:00",
+        "error": "timeout"
       },
       "history": [
         {
@@ -3077,16 +3126,24 @@
           "status_code": 200,
           "response_time": 266,
           "timestamp": "2026-03-14T00:20:44+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 10000,
+          "timestamp": "2026-03-14T00:29:12+00:00",
+          "error": "timeout"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     },
     "https://tracker.damaju.com.co": {
       "current": {
-        "up": true,
-        "status_code": 200,
-        "response_time": 553,
-        "timestamp": "2026-03-14T00:20:44+00:00"
+        "up": false,
+        "status_code": 0,
+        "response_time": 10000,
+        "timestamp": "2026-03-14T00:29:47+00:00",
+        "error": "timeout"
       },
       "history": [
         {
@@ -3517,9 +3574,16 @@
           "status_code": 200,
           "response_time": 553,
           "timestamp": "2026-03-14T00:20:44+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 10000,
+          "timestamp": "2026-03-14T00:29:47+00:00",
+          "error": "timeout"
         }
       ],
-      "pending_down": false
+      "pending_down": true
     }
   }
 }
