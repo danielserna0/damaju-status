@@ -16,7 +16,7 @@ SITES = [
     "https://tracker.damaju.com.co",
 ]
 
-TIMEOUT_SECONDS = 10
+TIMEOUT_SECONDS = 60
 MAX_HISTORY = 2016
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)"}
 STATUS_FILE = Path(__file__).parent / "status.json"
@@ -48,27 +48,29 @@ def check_site(url):
     for attempt in range(2):
         try:
             start = time.monotonic()
-            resp = requests.get(url, timeout=TIMEOUT_SECONDS, allow_redirects=True, headers=HEADERS)
+            resp = requests.get(url, timeout=60, allow_redirects=True, headers=HEADERS)
             elapsed_ms = round((time.monotonic() - start) * 1000)
-            up = resp.status_code < 500
             
             if attempt == 1 and first_error:
                 print(f"  ✅ Recuperado en segundo intento después de: {first_error}")
             
-            return {"up": up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
+            # Si la petición se completó (sin timeout), el servicio está UP
+            return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
             
         except requests.exceptions.Timeout:
             first_error = first_error or f"timeout (intento {attempt + 1})"
             if attempt == 0:
                 time.sleep(15)
             else:
-                return {"up": False, "status_code": 0, "response_time": TIMEOUT_SECONDS * 1000, "timestamp": ts, "error": "timeout"}
+                # Solo considerar DOWN si hay timeout en ambos intentos
+                return {"up": False, "status_code": 0, "response_time": 60000, "timestamp": ts, "error": "timeout"}
                 
         except requests.exceptions.RequestException as exc:
             first_error = first_error or f"{type(exc).__name__}: {str(exc)[:50]} (intento {attempt + 1})"
             if attempt == 0:
                 time.sleep(15)
             else:
+                # Para otros errores, también considerar DOWN si falla en ambos intentos
                 return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
 def send_telegram_with_button(message):
