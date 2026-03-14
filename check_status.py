@@ -74,7 +74,10 @@ def check_site(url):
                 return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
 def send_telegram_with_button(message):
+    print(f"  📱 Intentando enviar Telegram: {TELEGRAM_TOKEN[:10] if TELEGRAM_TOKEN else 'NONE'}...{TELEGRAM_CHAT_ID if TELEGRAM_CHAT_ID else 'NONE'}")
+    
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print(f"  ❌ Telegram no configurado: TOKEN={'SET' if TELEGRAM_TOKEN else 'NOT SET'}, CHAT_ID={'SET' if TELEGRAM_CHAT_ID else 'NOT SET'}")
         return
     
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -86,14 +89,20 @@ def send_telegram_with_button(message):
     }
     
     try:
-        requests.post(url, json={
+        response = requests.post(url, json={
             "chat_id": TELEGRAM_CHAT_ID, 
             "text": message, 
             "parse_mode": "HTML",
             "reply_markup": keyboard
         }, timeout=10)
+        
+        if response.status_code == 200:
+            print(f"  ✅ Telegram enviado exitosamente")
+        else:
+            print(f"  ❌ Error Telegram: HTTP {response.status_code} - {response.text[:100]}")
+            
     except Exception as exc:
-        print(f"Telegram error: {exc}")
+        print(f"  ❌ Telegram error: {exc}")
 
 def build_alert(down_sites, timestamp):
     if not down_sites:
