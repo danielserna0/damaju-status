@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-03-21T10:23:43+00:00",
+  "last_updated": "2026-03-21T10:43:43+00:00",
   "services": {
     "https://app-marko.damaju.com.co": {
       "current": {
         "up": false,
         "status_code": 0,
         "response_time": 0,
-        "timestamp": "2026-03-21T10:05:41+00:00",
+        "timestamp": "2026-03-21T10:25:42+00:00",
         "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
       },
       "history": [
@@ -11838,6 +11838,13 @@
           "response_time": 0,
           "timestamp": "2026-03-21T10:05:41+00:00",
           "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-21T10:25:42+00:00",
+          "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
         }
       ],
       "pending_down": false
@@ -11847,7 +11854,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 0,
-        "timestamp": "2026-03-21T10:07:57+00:00",
+        "timestamp": "2026-03-21T10:27:57+00:00",
         "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
       },
       "history": [
@@ -23679,6 +23686,13 @@
           "response_time": 0,
           "timestamp": "2026-03-21T10:07:57+00:00",
           "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-21T10:27:57+00:00",
+          "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
         }
       ],
       "pending_down": false
@@ -23688,7 +23702,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 60000,
-        "timestamp": "2026-03-21T10:10:12+00:00",
+        "timestamp": "2026-03-21T10:30:12+00:00",
         "error": "timeout"
       },
       "history": [
@@ -35520,6 +35534,13 @@
           "response_time": 60000,
           "timestamp": "2026-03-21T10:10:12+00:00",
           "error": "timeout"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 60000,
+          "timestamp": "2026-03-21T10:30:12+00:00",
+          "error": "timeout"
         }
       ],
       "pending_down": false
@@ -35529,7 +35550,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 60000,
-        "timestamp": "2026-03-21T10:12:27+00:00",
+        "timestamp": "2026-03-21T10:32:27+00:00",
         "error": "timeout"
       },
       "history": [
@@ -47361,6 +47382,13 @@
           "response_time": 60000,
           "timestamp": "2026-03-21T10:12:27+00:00",
           "error": "timeout"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 60000,
+          "timestamp": "2026-03-21T10:32:27+00:00",
+          "error": "timeout"
         }
       ],
       "pending_down": false
@@ -47370,7 +47398,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 0,
-        "timestamp": "2026-03-21T10:14:42+00:00",
+        "timestamp": "2026-03-21T10:34:43+00:00",
         "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
       },
       "history": [
@@ -59202,6 +59230,13 @@
           "response_time": 0,
           "timestamp": "2026-03-21T10:14:42+00:00",
           "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-21T10:34:43+00:00",
+          "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
         }
       ],
       "pending_down": false
@@ -59211,7 +59246,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 0,
-        "timestamp": "2026-03-21T10:16:57+00:00",
+        "timestamp": "2026-03-21T10:36:58+00:00",
         "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
       },
       "history": [
@@ -71043,6 +71078,13 @@
           "response_time": 0,
           "timestamp": "2026-03-21T10:16:57+00:00",
           "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 0,
+          "timestamp": "2026-03-21T10:36:58+00:00",
+          "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
         }
       ],
       "pending_down": false
@@ -71052,7 +71094,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 60000,
-        "timestamp": "2026-03-21T10:19:12+00:00",
+        "timestamp": "2026-03-21T10:39:13+00:00",
         "error": "timeout"
       },
       "history": [
@@ -82884,6 +82926,13 @@
           "response_time": 60000,
           "timestamp": "2026-03-21T10:19:12+00:00",
           "error": "timeout"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 60000,
+          "timestamp": "2026-03-21T10:39:13+00:00",
+          "error": "timeout"
         }
       ],
       "pending_down": false
@@ -82893,7 +82942,7 @@
         "up": false,
         "status_code": 0,
         "response_time": 60000,
-        "timestamp": "2026-03-21T10:21:27+00:00",
+        "timestamp": "2026-03-21T10:41:28+00:00",
         "error": "timeout"
       },
       "history": [
@@ -94725,15 +94774,22 @@
           "response_time": 60000,
           "timestamp": "2026-03-21T10:21:27+00:00",
           "error": "timeout"
+        },
+        {
+          "up": false,
+          "status_code": 0,
+          "response_time": 60000,
+          "timestamp": "2026-03-21T10:41:28+00:00",
+          "error": "timeout"
         }
       ],
       "pending_down": false
     }
   },
   "monitor_health": {
-    "last_run": "2026-03-21T10:23:43+00:00",
+    "last_run": "2026-03-21T10:43:43+00:00",
     "services_checked": 8,
-    "alerts_sent": 8,
+    "alerts_sent": 0,
     "execution_time": null
   }
 }
