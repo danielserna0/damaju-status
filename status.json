@@ -1,21 +1,14 @@
 {
-  "last_updated": "2026-03-21T19:30:44+00:00",
+  "last_updated": "2026-03-21T19:40:43+00:00",
   "services": {
     "https://app-marko.damaju.com.co": {
       "current": {
         "up": true,
         "status_code": 502,
-        "response_time": 363,
-        "timestamp": "2026-03-21T19:30:40+00:00"
+        "response_time": 118,
+        "timestamp": "2026-03-21T19:40:41+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 0,
-          "timestamp": "2026-03-13T21:35:40+00:00",
-          "error": "HTTPSConnectionPool(host='app-marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnection"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -12119,6 +12112,12 @@
           "status_code": 502,
           "response_time": 363,
           "timestamp": "2026-03-21T19:30:40+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 502,
+          "response_time": 118,
+          "timestamp": "2026-03-21T19:40:41+00:00"
         }
       ],
       "pending_down": false
@@ -12127,17 +12126,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 500,
-        "timestamp": "2026-03-21T19:30:41+00:00"
+        "response_time": 147,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 0,
-          "timestamp": "2026-03-13T21:36:16+00:00",
-          "error": "HTTPSConnectionPool(host='damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTT"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -24241,6 +24233,12 @@
           "status_code": 200,
           "response_time": 500,
           "timestamp": "2026-03-21T19:30:41+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 147,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -24249,17 +24247,10 @@
       "current": {
         "up": true,
         "status_code": 502,
-        "response_time": 517,
-        "timestamp": "2026-03-21T19:30:41+00:00"
+        "response_time": 115,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 10000,
-          "timestamp": "2026-03-13T21:36:51+00:00",
-          "error": "timeout"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -36363,6 +36354,12 @@
           "status_code": 502,
           "response_time": 517,
           "timestamp": "2026-03-21T19:30:41+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 502,
+          "response_time": 115,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -36371,17 +36368,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 348,
-        "timestamp": "2026-03-21T19:30:42+00:00"
+        "response_time": 138,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 10000,
-          "timestamp": "2026-03-13T21:37:26+00:00",
-          "error": "timeout"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -48485,6 +48475,12 @@
           "status_code": 200,
           "response_time": 348,
           "timestamp": "2026-03-21T19:30:42+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 138,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -48493,17 +48489,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 505,
-        "timestamp": "2026-03-21T19:30:42+00:00"
+        "response_time": 259,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 0,
-          "timestamp": "2026-03-13T21:38:01+00:00",
-          "error": "HTTPSConnectionPool(host='mando.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -60607,6 +60596,12 @@
           "status_code": 200,
           "response_time": 505,
           "timestamp": "2026-03-21T19:30:42+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 259,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -60615,17 +60610,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 626,
-        "timestamp": "2026-03-21T19:30:43+00:00"
+        "response_time": 247,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 0,
-          "timestamp": "2026-03-13T21:38:36+00:00",
-          "error": "HTTPSConnectionPool(host='marko.damaju.com.co', port=443): Max retries exceeded with url: / (Caused by NewConnectionErro"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -72729,6 +72717,12 @@
           "status_code": 200,
           "response_time": 626,
           "timestamp": "2026-03-21T19:30:43+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 247,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -72737,17 +72731,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 344,
-        "timestamp": "2026-03-21T19:30:43+00:00"
+        "response_time": 126,
+        "timestamp": "2026-03-21T19:40:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 10000,
-          "timestamp": "2026-03-13T21:39:11+00:00",
-          "error": "timeout"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -84851,6 +84838,12 @@
           "status_code": 200,
           "response_time": 344,
           "timestamp": "2026-03-21T19:30:43+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 126,
+          "timestamp": "2026-03-21T19:40:42+00:00"
         }
       ],
       "pending_down": false
@@ -84859,17 +84852,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 517,
-        "timestamp": "2026-03-21T19:30:44+00:00"
+        "response_time": 183,
+        "timestamp": "2026-03-21T19:40:43+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 10000,
-          "timestamp": "2026-03-13T21:39:46+00:00",
-          "error": "timeout"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -96973,13 +96959,19 @@
           "status_code": 200,
           "response_time": 517,
           "timestamp": "2026-03-21T19:30:44+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 183,
+          "timestamp": "2026-03-21T19:40:43+00:00"
         }
       ],
       "pending_down": false
     }
   },
   "monitor_health": {
-    "last_run": "2026-03-21T19:30:44+00:00",
+    "last_run": "2026-03-21T19:40:43+00:00",
     "services_checked": 8,
     "alerts_sent": 0,
     "execution_time": null
