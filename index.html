@@ -284,13 +284,14 @@ const NAMES={
   damaju:'Tienda Principal',
   mando:'Panel de Control',
   ops:'Personal Manager',
-  'app-marko':'Marko App',
+  'app-marko':'Agente Automático',
   intercom:'Intercomunicador',
   luma:'Luma',
   marko:'Marko',
   tracker:'Tracker',
   fe:'Facturación Electrónica'
 };
+const ORDER=['damaju','app-marko','mando','ops','intercom','luma','marko','tracker','fe'];
 
 function getName(url){
   try{const sub=new URL(url).hostname.split('.')[0];return NAMES[sub]||(sub[0].toUpperCase()+sub.slice(1));}
@@ -397,8 +398,13 @@ function render(data){
   $('footer-ts').textContent='Último check: '+fmtTime(data.last_updated);
   $('section-count').textContent=`${urls.length} servicios · cada 5 min`;
 
-  // Cards
-  $('services').innerHTML=urls.map((url,i)=>{
+  // Cards — ordenar por ORDER, los no listados van al final
+  const sortedUrls=[...urls].sort((a,b)=>{
+    const ai=ORDER.indexOf(new URL(a).hostname.split('.')[0]);
+    const bi=ORDER.indexOf(new URL(b).hostname.split('.')[0]);
+    return (ai===-1?999:ai)-(bi===-1?999:bi);
+  });
+  $('services').innerHTML=sortedUrls.map((url,i)=>{
     const svc=svcs[url]||{};
     const cur=svc.current;
     const isDown=cur&&!cur.up;
@@ -425,7 +431,6 @@ function render(data){
         <div class="sparks-lbl"><span>72 chequeos anteriores</span><span>${up!==null?up+'% uptime':'sin datos'}</span></div>
       </div>
       <div class="card-bot">
-        <span class="card-url">${url.replace('https://','').replace(/\/$/,'')}</span>
         <div class="card-metrics">
           ${up!==null?`<span class="metric-uptime ${upCls}">${up}%</span>`:'<span class="metric-uptime na">—</span>'}
           <span class="metric-ms">${ms!==null?ms+'ms':'—'}</span>
