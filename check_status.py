@@ -139,17 +139,25 @@ def calculate_metrics(history):
 def check_site(url):
     ts = now_iso()
 
-    try:
-        start = time.monotonic()
-        resp = requests.get(url, timeout=30, allow_redirects=True, headers=HEADERS)
-        elapsed_ms = round((time.monotonic() - start) * 1000)
-        return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
+    for attempt in range(2):
+        try:
+            start = time.monotonic()
+            resp = requests.get(url, timeout=30, allow_redirects=True, headers=HEADERS)
+            elapsed_ms = round((time.monotonic() - start) * 1000)
+            return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
 
-    except requests.exceptions.Timeout:
-        return {"up": False, "status_code": 0, "response_time": 30000, "timestamp": ts, "error": "timeout"}
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as exc:
+            if attempt == 0:
+                # Reintentar una vez para DNS/conexión transitoria
+                time.sleep(5)
+                continue
+            # Fallo en ambos intentos
+            error_type = "timeout" if isinstance(exc, requests.exceptions.Timeout) else "connection_error"
+            return {"up": False, "status_code": 0, "response_time": 30000, "timestamp": ts, "error": error_type}
 
-    except requests.exceptions.RequestException as exc:
-        return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
+        except requests.exceptions.RequestException as exc:
+            # Para otros errores (HTTP errors, etc), no reintentar
+            return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
 def send_telegram_with_button(message):
     print(f"  📱 Intentando enviar Telegram: {TELEGRAM_TOKEN[:10] if TELEGRAM_TOKEN else 'NONE'}...{TELEGRAM_CHAT_ID if TELEGRAM_CHAT_ID else 'NONE'}")
