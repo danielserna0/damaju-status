@@ -13,6 +13,7 @@
   "timeout_seconds": 60,
   "max_history": 2016,
   "alert_threshold": 2,
+  "telegram_enabled": false,
   "user_agent": "Mozilla/5.0 (compatible; DamajuStatusMonitor/1.0)",
   "dashboard_url": "https://status.damaju.com.co/"
 }
