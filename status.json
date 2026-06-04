@@ -1,21 +1,14 @@
 {
-  "last_updated": "2026-06-04T19:30:34+00:00",
+  "last_updated": "2026-06-04T19:35:50+00:00",
   "services": {
     "https://app-marko.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:20:47+00:00",
-        "error": "connection_error"
+        "up": true,
+        "status_code": 200,
+        "response_time": 333,
+        "timestamp": "2026-06-04T19:35:46+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 115,
-          "timestamp": "2026-05-27T10:10:42+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -12122,6 +12115,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:20:47+00:00",
           "error": "connection_error"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 333,
+          "timestamp": "2026-06-04T19:35:46+00:00"
         }
       ],
       "pending_down": false,
@@ -12129,19 +12128,12 @@
     },
     "https://damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:21:52+00:00",
-        "error": "connection_error"
+        "up": true,
+        "status_code": 200,
+        "response_time": 518,
+        "timestamp": "2026-06-04T19:35:47+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 152,
-          "timestamp": "2026-05-27T10:10:42+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -24248,6 +24240,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:21:52+00:00",
           "error": "connection_error"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 518,
+          "timestamp": "2026-06-04T19:35:47+00:00"
         }
       ],
       "pending_down": false,
@@ -24256,18 +24254,11 @@
     "https://intercom.damaju.com.co/": {
       "current": {
         "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:22:57+00:00",
-        "error": "timeout"
+        "status_code": 502,
+        "response_time": 518,
+        "timestamp": "2026-06-04T19:35:47+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 502,
-          "response_time": 103,
-          "timestamp": "2026-05-27T10:10:42+00:00"
-        },
         {
           "up": true,
           "status_code": 502,
@@ -36373,6 +36364,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:22:57+00:00",
           "error": "timeout"
+        },
+        {
+          "up": false,
+          "status_code": 502,
+          "response_time": 518,
+          "timestamp": "2026-06-04T19:35:47+00:00"
         }
       ],
       "pending_down": false,
@@ -36380,19 +36377,12 @@
     },
     "https://luma.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:24:03+00:00",
-        "error": "timeout"
+        "up": true,
+        "status_code": 200,
+        "response_time": 335,
+        "timestamp": "2026-06-04T19:35:48+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 142,
-          "timestamp": "2026-05-27T10:10:42+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -48498,6 +48488,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:24:03+00:00",
           "error": "timeout"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 335,
+          "timestamp": "2026-06-04T19:35:48+00:00"
         }
       ],
       "pending_down": false,
@@ -48505,19 +48501,12 @@
     },
     "https://mando.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:25:08+00:00",
-        "error": "connection_error"
+        "up": true,
+        "status_code": 200,
+        "response_time": 573,
+        "timestamp": "2026-06-04T19:35:48+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 277,
-          "timestamp": "2026-05-27T10:10:43+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -60623,6 +60612,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:25:08+00:00",
           "error": "connection_error"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 573,
+          "timestamp": "2026-06-04T19:35:48+00:00"
         }
       ],
       "pending_down": false,
@@ -60630,19 +60625,12 @@
     },
     "https://marko.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:26:13+00:00",
-        "error": "connection_error"
+        "up": true,
+        "status_code": 200,
+        "response_time": 580,
+        "timestamp": "2026-06-04T19:35:49+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 227,
-          "timestamp": "2026-05-27T10:10:43+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -72748,6 +72736,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:26:13+00:00",
           "error": "connection_error"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 580,
+          "timestamp": "2026-06-04T19:35:49+00:00"
         }
       ],
       "pending_down": false,
@@ -72755,19 +72749,12 @@
     },
     "https://ops.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:27:18+00:00",
-        "error": "timeout"
+        "up": true,
+        "status_code": 200,
+        "response_time": 275,
+        "timestamp": "2026-06-04T19:35:49+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 116,
-          "timestamp": "2026-05-27T10:10:43+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -84873,6 +84860,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:27:18+00:00",
           "error": "timeout"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 275,
+          "timestamp": "2026-06-04T19:35:49+00:00"
         }
       ],
       "pending_down": false,
@@ -84880,19 +84873,12 @@
     },
     "https://tracker.damaju.com.co": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:28:23+00:00",
-        "error": "timeout"
+        "up": true,
+        "status_code": 200,
+        "response_time": 509,
+        "timestamp": "2026-06-04T19:35:50+00:00"
       },
       "history": [
-        {
-          "up": true,
-          "status_code": 200,
-          "response_time": 216,
-          "timestamp": "2026-05-27T10:10:43+00:00"
-        },
         {
           "up": true,
           "status_code": 200,
@@ -96998,6 +96984,12 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:28:23+00:00",
           "error": "timeout"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 509,
+          "timestamp": "2026-06-04T19:35:50+00:00"
         }
       ],
       "pending_down": false,
@@ -97005,11 +96997,10 @@
     },
     "https://fe.damaju.com.co/": {
       "current": {
-        "up": false,
-        "status_code": 0,
-        "response_time": 30000,
-        "timestamp": "2026-06-04T19:29:28+00:00",
-        "error": "connection_error"
+        "up": true,
+        "status_code": 200,
+        "response_time": 244,
+        "timestamp": "2026-06-04T19:35:50+00:00"
       },
       "history": [
         {
@@ -97105,13 +97096,19 @@
           "response_time": 30000,
           "timestamp": "2026-06-04T19:29:28+00:00",
           "error": "connection_error"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 244,
+          "timestamp": "2026-06-04T19:35:50+00:00"
         }
       ],
       "alert_sent": false
     }
   },
   "monitor_health": {
-    "last_run": "2026-06-04T19:30:34+00:00",
+    "last_run": "2026-06-04T19:35:50+00:00",
     "services_checked": 9,
     "alerts_sent": 0,
     "execution_time": null
