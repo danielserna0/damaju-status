@@ -138,35 +138,18 @@ def calculate_metrics(history):
 
 def check_site(url):
     ts = now_iso()
-    first_error = None
-    
-    for attempt in range(2):
-        try:
-            start = time.monotonic()
-            resp = requests.get(url, timeout=60, allow_redirects=True, headers=HEADERS)
-            elapsed_ms = round((time.monotonic() - start) * 1000)
-            
-            if attempt == 1 and first_error:
-                print(f"  ✅ Recuperado en segundo intento después de: {first_error}")
-            
-            # Si la petición se completó (sin timeout), el servicio está UP
-            return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
-            
-        except requests.exceptions.Timeout:
-            first_error = first_error or f"timeout (intento {attempt + 1})"
-            if attempt == 0:
-                time.sleep(15)
-            else:
-                # Solo considerar DOWN si hay timeout en ambos intentos
-                return {"up": False, "status_code": 0, "response_time": 60000, "timestamp": ts, "error": "timeout"}
-                
-        except requests.exceptions.RequestException as exc:
-            first_error = first_error or f"{type(exc).__name__}: {str(exc)[:50]} (intento {attempt + 1})"
-            if attempt == 0:
-                time.sleep(15)
-            else:
-                # Para otros errores, también considerar DOWN si falla en ambos intentos
-                return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
+
+    try:
+        start = time.monotonic()
+        resp = requests.get(url, timeout=30, allow_redirects=True, headers=HEADERS)
+        elapsed_ms = round((time.monotonic() - start) * 1000)
+        return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
+
+    except requests.exceptions.Timeout:
+        return {"up": False, "status_code": 0, "response_time": 30000, "timestamp": ts, "error": "timeout"}
+
+    except requests.exceptions.RequestException as exc:
+        return {"up": False, "status_code": 0, "response_time": 0, "timestamp": ts, "error": str(exc)[:120]}
 
 def send_telegram_with_button(message):
     print(f"  📱 Intentando enviar Telegram: {TELEGRAM_TOKEN[:10] if TELEGRAM_TOKEN else 'NONE'}...{TELEGRAM_CHAT_ID if TELEGRAM_CHAT_ID else 'NONE'}")
@@ -249,7 +232,7 @@ def main():
     print(f"[{now_iso()}] 🚀 Iniciando monitoreo de {len(SITES)} servicios")
     data = load_status()
     services = data.setdefault("services", {})
-    
+
     confirmed_down_sites = []
     recovered_sites = []
 
@@ -258,38 +241,43 @@ def main():
         result = check_site(url)
         print(f"  📊 Estado: up={result['up']} code={result['status_code']} ms={result['response_time']}")
 
-        entry = services.setdefault(url, {"current": None, "history": [], "pending_down": False})
+        entry = services.setdefault(url, {"current": None, "history": [], "alert_sent": False})
         previous = entry.get("current")
-        pending_down = entry.get("pending_down", False)
+        alert_sent = entry.get("alert_sent", False)
 
-        print(f"  📋 Anterior: up={previous.get('up') if previous else 'None'} | pending_down={pending_down}")
+        print(f"  📋 Anterior: up={previous.get('up') if previous else 'None'} | alert_sent={alert_sent}")
 
         if previous is not None:
-            if result["up"]:
-                # Está arriba ahora
-                if not previous.get("up", True):
-                    # Estaba DOWN confirmado → registrar recuperación
+            prev_up = previous.get("up", True)
+            curr_up = result["up"]
+
+            if curr_up and not prev_up:
+                # Transición DOWN → UP: Solo alertar si ya se había alertado de caída
+                if alert_sent:
                     downtime = datetime.fromisoformat(result['timestamp']) - datetime.fromisoformat(previous['timestamp'])
                     print(f"  ⏰ Downtime: {downtime.total_seconds():.1f}s")
                     print(f"  🟢 RECUPERADO (downtime: {downtime.total_seconds():.1f}s)")
                     recovered_sites.append(url)
-                        
-                elif pending_down:
-                    # Estaba pending_down pero se recuperó → no alertar, solo limpiar
-                    print(f"  ✅ Recuperado antes de confirmación, sin alerta")
-                entry["pending_down"] = False
-            else:
-                # Está abajo ahora
-                if pending_down:
-                    # Ya falló el run anterior también → confirmar DOWN
-                    print(f"  🔴 CONFIRMADO DOWN (2 ejecuciones consecutivas)")
-                    confirmed_down_sites.append(url)
-                    entry["pending_down"] = False
-                elif previous.get("up", True):
-                    # Primera vez que falla → marcar pending, NO alertar todavía
-                    print(f"  ⚠️ Primer fallo → marcando pending_down, esperar siguiente ejecución")
-                    entry["pending_down"] = True
-                # Si previous ya era down y pending_down=False, ya se alertó antes, no hacer nada
+                    entry["alert_sent"] = False
+                else:
+                    # Se recuperó pero nunca se alertó de caída → no alertar recuperación
+                    print(f"  ✅ Recuperado, pero no se había enviado alerta de caída")
+                    entry["alert_sent"] = False
+
+            elif not curr_up and prev_up:
+                # Transición UP → DOWN: Marcar para alertar en siguiente ciclo
+                print(f"  ⚠️ Primer fallo detectado → esperando confirmación en siguiente ejecución")
+                entry["alert_sent"] = False  # No alertar aún
+
+            elif not curr_up and not prev_up and not alert_sent:
+                # Confirmado: DOWN en dos ciclos consecutivos → ALERTA
+                print(f"  🔴 CONFIRMADO DOWN (2 ciclos consecutivos sin recuperación)")
+                confirmed_down_sites.append(url)
+                entry["alert_sent"] = True
+
+            elif curr_up and prev_up:
+                # Todo normal, sigue UP
+                entry["alert_sent"] = False
 
         entry["current"] = result
         entry["history"].append(result)
