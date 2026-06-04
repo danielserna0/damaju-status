@@ -144,7 +144,10 @@ def check_site(url):
             start = time.monotonic()
             resp = requests.get(url, timeout=30, allow_redirects=True, headers=HEADERS)
             elapsed_ms = round((time.monotonic() - start) * 1000)
-            return {"up": True, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
+
+            # Considerar UP solo si status es 2xx o 3xx
+            is_up = 200 <= resp.status_code < 400
+            return {"up": is_up, "status_code": resp.status_code, "response_time": elapsed_ms, "timestamp": ts}
 
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as exc:
             if attempt == 0:
