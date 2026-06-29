@@ -1,21 +1,14 @@
 {
-  "last_updated": "2026-06-29T18:50:42+00:00",
+  "last_updated": "2026-06-29T19:00:42+00:00",
   "services": {
     "https://app-marko.damaju.com.co": {
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 194,
-        "timestamp": "2026-06-29T18:50:39+00:00"
+        "response_time": 93,
+        "timestamp": "2026-06-29T19:00:40+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:10:40+00:00",
-          "error": "connection_error"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -12152,6 +12145,12 @@
           "status_code": 200,
           "response_time": 194,
           "timestamp": "2026-06-29T18:50:39+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 93,
+          "timestamp": "2026-06-29T19:00:40+00:00"
         }
       ],
       "pending_down": false,
@@ -12161,17 +12160,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 599,
-        "timestamp": "2026-06-29T18:50:39+00:00"
+        "response_time": 473,
+        "timestamp": "2026-06-29T19:00:40+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:11:45+00:00",
-          "error": "connection_error"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -24308,6 +24300,12 @@
           "status_code": 200,
           "response_time": 599,
           "timestamp": "2026-06-29T18:50:39+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 473,
+          "timestamp": "2026-06-29T19:00:40+00:00"
         }
       ],
       "pending_down": false,
@@ -24317,17 +24315,10 @@
       "current": {
         "up": false,
         "status_code": 502,
-        "response_time": 446,
-        "timestamp": "2026-06-29T18:50:40+00:00"
+        "response_time": 85,
+        "timestamp": "2026-06-29T19:00:41+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:12:50+00:00",
-          "error": "timeout"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -36464,6 +36455,12 @@
           "status_code": 502,
           "response_time": 446,
           "timestamp": "2026-06-29T18:50:40+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 502,
+          "response_time": 85,
+          "timestamp": "2026-06-29T19:00:41+00:00"
         }
       ],
       "pending_down": false,
@@ -36473,17 +36470,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 164,
-        "timestamp": "2026-06-29T18:50:40+00:00"
+        "response_time": 127,
+        "timestamp": "2026-06-29T19:00:41+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:13:55+00:00",
-          "error": "timeout"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -48620,6 +48610,12 @@
           "status_code": 200,
           "response_time": 164,
           "timestamp": "2026-06-29T18:50:40+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 127,
+          "timestamp": "2026-06-29T19:00:41+00:00"
         }
       ],
       "pending_down": false,
@@ -48629,17 +48625,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 743,
-        "timestamp": "2026-06-29T18:50:40+00:00"
+        "response_time": 264,
+        "timestamp": "2026-06-29T19:00:41+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:15:01+00:00",
-          "error": "connection_error"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -60775,6 +60764,12 @@
           "status_code": 200,
           "response_time": 743,
           "timestamp": "2026-06-29T18:50:40+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 264,
+          "timestamp": "2026-06-29T19:00:41+00:00"
         }
       ],
       "pending_down": false,
@@ -60784,17 +60779,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 466,
-        "timestamp": "2026-06-29T18:50:41+00:00"
+        "response_time": 581,
+        "timestamp": "2026-06-29T19:00:41+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:16:06+00:00",
-          "error": "connection_error"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -72930,6 +72918,12 @@
           "status_code": 200,
           "response_time": 466,
           "timestamp": "2026-06-29T18:50:41+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 581,
+          "timestamp": "2026-06-29T19:00:41+00:00"
         }
       ],
       "pending_down": false,
@@ -72939,17 +72933,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 120,
-        "timestamp": "2026-06-29T18:50:41+00:00"
+        "response_time": 97,
+        "timestamp": "2026-06-29T19:00:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:17:11+00:00",
-          "error": "timeout"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -85085,6 +85072,12 @@
           "status_code": 200,
           "response_time": 120,
           "timestamp": "2026-06-29T18:50:41+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 97,
+          "timestamp": "2026-06-29T19:00:42+00:00"
         }
       ],
       "pending_down": false,
@@ -85094,17 +85087,10 @@
       "current": {
         "up": true,
         "status_code": 200,
-        "response_time": 169,
-        "timestamp": "2026-06-29T18:50:42+00:00"
+        "response_time": 168,
+        "timestamp": "2026-06-29T19:00:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:18:16+00:00",
-          "error": "timeout"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -97240,6 +97226,12 @@
           "status_code": 200,
           "response_time": 169,
           "timestamp": "2026-06-29T18:50:42+00:00"
+        },
+        {
+          "up": true,
+          "status_code": 200,
+          "response_time": 168,
+          "timestamp": "2026-06-29T19:00:42+00:00"
         }
       ],
       "pending_down": false,
@@ -97249,17 +97241,10 @@
       "current": {
         "up": false,
         "status_code": 502,
-        "response_time": 101,
-        "timestamp": "2026-06-29T18:50:42+00:00"
+        "response_time": 102,
+        "timestamp": "2026-06-29T19:00:42+00:00"
       },
       "history": [
-        {
-          "up": false,
-          "status_code": 0,
-          "response_time": 30000,
-          "timestamp": "2026-06-21T17:19:21+00:00",
-          "error": "connection_error"
-        },
         {
           "up": false,
           "status_code": 0,
@@ -109395,13 +109380,19 @@
           "status_code": 502,
           "response_time": 101,
           "timestamp": "2026-06-29T18:50:42+00:00"
+        },
+        {
+          "up": false,
+          "status_code": 502,
+          "response_time": 102,
+          "timestamp": "2026-06-29T19:00:42+00:00"
         }
       ],
       "alert_sent": true
     }
   },
   "monitor_health": {
-    "last_run": "2026-06-29T18:50:42+00:00",
+    "last_run": "2026-06-29T19:00:42+00:00",
     "services_checked": 9,
     "alerts_sent": 0,
     "execution_time": null
